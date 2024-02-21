@@ -53,7 +53,6 @@ module "REPLACE_ME" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws.core_logging"></a> [aws.core\_logging](#provider\_aws.core\_logging) | >= 5.0 |
 | <a name="provider_aws.org_cloudtrail_admin"></a> [aws.org\_cloudtrail\_admin](#provider\_aws.org\_cloudtrail\_admin) | >= 5.0 |
 
 ## Modules
@@ -68,9 +67,7 @@ module "REPLACE_ME" {
 | Name | Type |
 |------|------|
 | [aws_cloudtrail.org_cloudtrail_mgmt](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail) | resource |
-| [aws_caller_identity.core_logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_caller_identity.org_cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_region.org_cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
 
@@ -78,9 +75,7 @@ module "REPLACE_ME" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_org_cloudtrail_name"></a> [org\_cloudtrail\_name](#input\_org\_cloudtrail\_name) | Name of the Organization CloudTrail. | `string` | n/a | yes |
 | <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name_prefix  = string<br>    days_to_glacier     = optional(number, -1)<br>    days_to_expiration  = number<br>    bucket_access_s3_id = optional(string, null)<br>    force_destroy       = optional(bool, false) // true - for testing only<br>  })</pre> | n/a | yes |
-| <a name="input_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#input\_cloudwatch\_loggroup) | Configuration settings for CloudWatch LogGroup. | <pre>object({<br>    enabled           = optional(string, "foundation-cloudtrail-role") // without prefix<br>    iam_role_name     = optional(string, "foundation-cloudtrail-role") // without prefix<br>    retention_in_days = optional(number, 3)<br>    monitoring = optional(object({<br>      inbound_iam_role_name = optional(string, null)<br>      destination_arn       = optional(string, null)<br>    }), null)<br>  })</pre> | `null` | no |
-| <a name="input_iam_role_path"></a> [iam\_role\_path](#input\_iam\_role\_path) | Path of the IAM role. | `string` | `null` | no |
-| <a name="input_iam_role_permissions_boundary_arn"></a> [iam\_role\_permissions\_boundary\_arn](#input\_iam\_role\_permissions\_boundary\_arn) | ARN of the policy that is used to set the permissions boundary for all IAM roles of the module. | `string` | `null` | no |
+| <a name="input_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#input\_cloudwatch\_loggroup) | Configuration settings for CloudWatch LogGroup. | <pre>object({<br>    iam_role_name     = optional(string, "cloudtrail-role") // without prefix<br>    iam_role_path     = optional(string, "/")               // without prefix<br>    iam_role_pb       = optional(string, null)<br>    retention_in_days = optional(number, 3)<br>    monitoring = optional(object({<br>      inbound_iam_role_name = optional(string, null)<br>      destination_arn       = optional(string, null)<br>    }), null)<br>  })</pre> | `null` | no |
 | <a name="input_resource_name_prefix"></a> [resource\_name\_prefix](#input\_resource\_name\_prefix) | Alphanumeric suffix for all the resource names in this module. | `string` | `""` | no |
 | <a name="input_resource_name_suffix"></a> [resource\_name\_suffix](#input\_resource\_name\_suffix) | Alphanumeric suffix for all the resource names in this module. | `string` | `""` | no |
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | A map of tags to assign to the resources in this module. | `map(string)` | `{}` | no |
