@@ -22,7 +22,7 @@ terraform {
 # ¦ DATA
 # ---------------------------------------------------------------------------------------------------------------------
 data "aws_caller_identity" "org_cloudtrail" {
-  provider = aws.core_logging
+  provider = aws.org_cloudtrail_admin
 }
 
 
@@ -38,7 +38,7 @@ module "log_archive_bucket" {
   resource_tags        = var.resource_tags
   resource_name_prefix = var.resource_name_prefix
   providers = {
-    aws = aws.org_cloudtrail_admin
+    aws = aws.core_logging
   }
 }
 
