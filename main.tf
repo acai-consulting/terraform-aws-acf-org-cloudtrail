@@ -22,7 +22,7 @@ terraform {
 # ¦ DATA
 # ---------------------------------------------------------------------------------------------------------------------
 data "aws_caller_identity" "org_cloudtrail" {
-  provider = aws.org_cloudtrail_admin
+  provider = aws.core_logging
 }
 
 
