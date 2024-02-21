@@ -1,8 +1,8 @@
 package test
 
-import 
+import (
 	"testing"
-
+	"github.com/stretchr/testify/assert"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
@@ -19,8 +19,9 @@ func TestExampleComplete(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApply(t, terraformOptions)
 
-	templateOutput := terraform.Output(t, terraformOptions, "template")
+	// Retrieve the 'test_success' output
+	testSuccessOutput := terraform.Output(t, terraformOptions, "test_success")
 
-	t.Log(templateOutput)
-	// Do testing. I.E check if your ressources are deployed via AWS GO SDK
+	// Assert that 'test_success' equals "true"
+	assert.Equal(t, "true", testSuccessOutput, "The test_success output is not true")
 }

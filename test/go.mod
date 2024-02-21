@@ -1,4 +1,4 @@
-module github.com/nuvibit/REPLACE_ME/test
+module github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/test
 
 go 1.18
 
