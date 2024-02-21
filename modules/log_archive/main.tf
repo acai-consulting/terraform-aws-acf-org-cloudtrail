@@ -116,8 +116,8 @@ resource "aws_s3_bucket_ownership_controls" "cloudtrail_logs" {
 
 resource "aws_s3_bucket_acl" "cloudtrail_logs" {
   depends_on = [aws_s3_bucket_ownership_controls.cloudtrail_logs]
-  bucket = aws_s3_bucket.cloudtrail_logs.id
-  acl    = "log-delivery-write"
+  bucket     = aws_s3_bucket.cloudtrail_logs.id
+  acl        = "log-delivery-write"
 }
 
 resource "aws_s3_bucket_public_access_block" "cloudtrail_logs" {
