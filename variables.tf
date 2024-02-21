@@ -21,16 +21,18 @@ variable "cloudwatch_loggroup" {
   default = null
 
   validation {
-    condition = contains(
+    condition = var.cloudwatch_loggroup == null ? true : (
+      contains(
       [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 120, 150, 180, 365, 400, 545, 731, 1827, 3653], var.cloudwatch_loggroup.retention_in_days
-    )
+    ))
     error_message = "The CloudWatch Logs retention period must be a Fibonacci number and supported by AWS (1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 120, 150, 180, 365, 400, 545, 731, 1827, or 3653 days)."
   }
 
   validation {
-    condition = var.cloudwatch_loggroup.monitoring == null ? true : (
+    condition = var.cloudwatch_loggroup == null ? true : (
+      var.cloudwatch_loggroup.monitoring == null ? true : (
       (var.cloudwatch_loggroup.monitoring.destination_arn == null ? true :
-    can(regex("^arn:aws:logs:", var.cloudwatch_loggroup.monitoring.destination_arn))))
+    can(regex("^arn:aws:logs:", var.cloudwatch_loggroup.monitoring.destination_arn)))))
     error_message = "If monitoring is specified, destination_arn must contain ARN, starting with 'arn:aws:logs:'."
   }
 }
