@@ -181,7 +181,7 @@ resource "aws_s3_bucket" "log_bucket" {
   bucket = "${aws_s3_bucket.cloudtrail_logs.id}-access-logs"
 }
 
-resource "aws_s3_bucket_public_access_block" "cloudtrail_logs" {
+resource "aws_s3_bucket_public_access_block" "log_bucket" {
   count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
 
   bucket = aws_s3_bucket.log_bucket[0].id
