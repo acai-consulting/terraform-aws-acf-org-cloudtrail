@@ -66,8 +66,8 @@ resource "aws_cloudtrail" "org_cloudtrail_mgmt" {
   s3_bucket_name                = module.log_archive_bucket.bucket_id
   enable_log_file_validation    = true
   kms_key_id                    = module.log_archive_bucket.kms_cmk_arn
-  cloud_watch_logs_group_arn    = var.cloudwatch_loggroup != null ? module.cloudwatch_loggroup[0].loggroup_arn : null
-  cloud_watch_logs_role_arn     = var.cloudwatch_loggroup != null ? module.cloudwatch_loggroup[0].iam_role_arn : null
+  cloud_watch_logs_group_arn    = var.cloudwatch_loggroup == null ? null : "${module.cloudwatch_loggroup[0].loggroup_arn}:*" # CloudTrail requires the Log Stream wildcard 
+  cloud_watch_logs_role_arn     = var.cloudwatch_loggroup == null ? null : module.cloudwatch_loggroup[0].iam_role_arn
   event_selector {
     read_write_type           = "All"
     include_management_events = true
