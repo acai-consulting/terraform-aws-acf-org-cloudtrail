@@ -184,7 +184,7 @@ resource "aws_s3_bucket" "log_bucket" {
 resource "aws_s3_bucket_public_access_block" "log_bucket" {
   count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
 
-  bucket = aws_s3_bucket.log_bucket[0].id
+  bucket                  = aws_s3_bucket.log_bucket[0].id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
