@@ -37,7 +37,7 @@ module "log_archive_bucket" {
   org_mgmt_account_id  = data.aws_caller_identity.org_cloudtrail.account_id
   resource_tags        = var.resource_tags
   resource_name_prefix = var.resource_name_prefix
-  providers            = {
+  providers = {
     aws = aws.org_cloudtrail_admin
   }
 }
@@ -50,7 +50,7 @@ module "cloudwatch_loggroup" {
   cloudwatch_loggroup  = var.cloudwatch_loggroup
   resource_tags        = var.resource_tags
   resource_name_prefix = var.resource_name_prefix
-  providers            = {
+  providers = {
     aws = aws.org_cloudtrail_admin
   }
 }
