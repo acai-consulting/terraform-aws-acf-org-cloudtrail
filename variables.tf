@@ -9,8 +9,8 @@ variable "org_cloudtrail_name" {
 variable "cloudwatch_loggroup" {
   description = "Configuration settings for CloudWatch LogGroup."
   type = object({
-    iam_role_name     = optional(string, "cloudtrail-role") // without prefix
-    iam_role_path     = optional(string, "/")               // without prefix
+    iam_role_name     = optional(string, "cloudtrail-role") # without prefix
+    iam_role_path     = optional(string, "/")               # without prefix
     iam_role_pb       = optional(string, null)
     retention_in_days = optional(number, 3)
     monitoring = optional(object({
@@ -84,7 +84,7 @@ variable "resource_name_prefix" {
     error_message = "Value must be alphanumeric."
   }
 }
-
+/*
 variable "resource_name_suffix" {
   description = "Alphanumeric suffix for all the resource names in this module."
   type        = string
@@ -95,3 +95,4 @@ variable "resource_name_suffix" {
     error_message = "Value must be alphanumeric."
   }
 }
+*/
