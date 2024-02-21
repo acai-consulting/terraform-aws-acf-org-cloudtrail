@@ -13,7 +13,6 @@ terraform {
     }
   }
 }
-aws s3api put-object-lock-configuration --bucket test-org-cloudtrail20240221165537900600000001 --object-lock-configuration 'ObjectLockEnabled="Enabled",Rule={DefaultRetention={Mode="GOVERNANCE",Days=1}}'
 
 
 # ---------------------------------------------------------------------------------------------------------------------
