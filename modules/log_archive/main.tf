@@ -176,7 +176,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_lifecycle" {
 
 
 resource "aws_s3_bucket" "log_bucket" {
-  count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
+  count         = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
+  force_destroy = var.s3_bucket.force_destroy
 
   bucket = "${aws_s3_bucket.cloudtrail_logs.id}-access-logs"
 }
