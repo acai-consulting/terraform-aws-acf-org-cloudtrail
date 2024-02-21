@@ -209,7 +209,7 @@ resource "aws_s3_bucket_logging" "data_bucket" {
 ## https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/
 ## https://aws.amazon.com/premiumsupport/knowledge-center/s3-bucket-store-kms-encrypted-objects/
 resource "aws_s3_bucket_policy" "core_logging_cloudtrail_mgmt_bucket_name" {
-  bucket = module.core_logging_cloudtrail_mgmt_bucket.name
+  bucket = aws_s3_bucket.data_bucket.id
   policy = data.aws_iam_policy_document.core_logging_cloudtrail_mgmt_bucket_name.json
 }
 
