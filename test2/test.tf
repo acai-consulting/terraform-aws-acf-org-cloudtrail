@@ -11,10 +11,6 @@ variable "s3_bucket" {
     }), null)
   })
   default = null
-
-
-
-  # Add any additional validations as needed
 }
 
 output "result" {

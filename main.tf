@@ -24,12 +24,7 @@ terraform {
 data "aws_caller_identity" "org_cloudtrail" {
   provider = aws.org_cloudtrail_admin
 }
-data "aws_region" "org_cloudtrail" {
-  provider = aws.org_cloudtrail_admin
-}
-data "aws_caller_identity" "core_logging" {
-  provider = aws.core_logging
-}
+
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -49,6 +44,7 @@ module "cloudwatch_loggroup" {
   source = "./modules/cloudwatch_loggroup"
   count  = var.cloudwatch_loggroup != null ? 1 : 0
 
+  org_cloudtrail_name  = var.org_cloudtrail_name
   cloudwatch_loggroup  = var.cloudwatch_loggroup
   resource_tags        = var.resource_tags
   resource_name_prefix = var.resource_name_prefix

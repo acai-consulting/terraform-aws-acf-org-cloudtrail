@@ -1,4 +1,3 @@
-
 variable "s3_bucket" {
   description = "Configuration settings for core logging."
   type = object({
