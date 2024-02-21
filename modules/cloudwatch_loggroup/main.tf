@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------------------------------------------------------------
 terraform {
   # This module is only being tested with Terraform 0.15.x and newer.
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.3.0"
 
   required_providers {
     aws = {

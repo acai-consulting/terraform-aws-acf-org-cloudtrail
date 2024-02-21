@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------------------------------------------------------------
 terraform {
   # This module is only being tested with Terraform 0.15.x and newer.
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.3.0"
 
   required_providers {
     aws = {
@@ -13,6 +13,7 @@ terraform {
     }
   }
 }
+aws s3api put-object-lock-configuration --bucket test-org-cloudtrail20240221165537900600000001 --object-lock-configuration 'ObjectLockEnabled="Enabled",Rule={DefaultRetention={Mode="GOVERNANCE",Days=1}}'
 
 
 # ---------------------------------------------------------------------------------------------------------------------
