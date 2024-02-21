@@ -31,7 +31,7 @@ locals {
 # ¦ CORE LOGGING - KMS KEY
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_kms_key" "core_logging_cloudtrail_mgmt_kms" {
-  description             = "encryption key for object uploads to ${aws_s3_bucket.data_bucket.id}"
+  description             = "encryption key for object uploads to ${aws_s3_bucket.cloudtrail_logs.id}"
   deletion_window_in_days = 7
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.core_logging_cloudtrail_mgmt_kms.json
@@ -94,26 +94,34 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_kms" {
 }
 
 resource "aws_kms_alias" "core_logging_cloudtrail_mgmt_kms" {
-  name          = "alias/${replace(aws_s3_bucket.data_bucket.id, ".", "-")}-key"
+  name          = "alias/${replace(aws_s3_bucket.cloudtrail_logs.id, ".", "-")}-key"
   target_key_id = aws_kms_key.core_logging_cloudtrail_mgmt_kms.key_id
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ CORE LOGGING - S3 BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
-resource "aws_s3_bucket" "data_bucket" {
+resource "aws_s3_bucket" "cloudtrail_logs" {
   bucket_prefix = local.bucket_name_prefix
   force_destroy = var.s3_bucket.force_destroy
   tags          = var.resource_tags
 }
 
-resource "aws_s3_bucket_acl" "data_bucket" {
-  bucket = aws_s3_bucket.data_bucket.id
+resource "aws_s3_bucket_ownership_controls" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
+resource "aws_s3_bucket_acl" "cloudtrail_logs" {
+  depends_on = [aws_s3_bucket_ownership_controls.cloudtrail_logs]
+  bucket = aws_s3_bucket.cloudtrail_logs.id
   acl    = "log-delivery-write"
 }
 
-resource "aws_s3_bucket_public_access_block" "data_bucket" {
-  bucket = aws_s3_bucket.data_bucket.id
+resource "aws_s3_bucket_public_access_block" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -121,22 +129,16 @@ resource "aws_s3_bucket_public_access_block" "data_bucket" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_ownership_controls" "s3_ownership_control" {
-  bucket = aws_s3_bucket.data_bucket.id
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
 
-resource "aws_s3_bucket_versioning" "data_bucket" {
-  bucket = aws_s3_bucket.data_bucket.id
+resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_object_lock_configuration" "data_bucket" {
-  bucket = aws_s3_bucket.data_bucket.bucket
+resource "aws_s3_bucket_object_lock_configuration" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.bucket
   rule {
     default_retention {
       mode = "COMPLIANCE"
@@ -145,8 +147,8 @@ resource "aws_s3_bucket_object_lock_configuration" "data_bucket" {
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "data_bucket_custom" {
-  bucket = aws_s3_bucket.data_bucket.id
+resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs_custom" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
   rule {
     apply_server_side_encryption_by_default {
       kms_master_key_id = aws_kms_key.core_logging_cloudtrail_mgmt_kms.arn
@@ -155,10 +157,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "data_bucket_custo
   }
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "data_bucket_galcier" {
+resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_galcier" {
   count = var.s3_bucket.days_to_glacier != -1 ? 1 : 0
 
-  bucket = aws_s3_bucket.data_bucket.id
+  bucket = aws_s3_bucket.cloudtrail_logs.id
   rule {
     id     = "Glacier"
     status = "Enabled"
@@ -169,8 +171,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "data_bucket_galcier" {
   }
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "data_bucket_expiration" {
-  bucket = aws_s3_bucket.data_bucket.id
+resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_expiration" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
   rule {
     id     = "Expiration"
     status = "Enabled"
@@ -185,7 +187,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "data_bucket_expiration" {
 resource "aws_s3_bucket" "log_bucket" {
   count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
 
-  bucket = "${aws_s3_bucket.data_bucket.id}-access-logs"
+  bucket = "${aws_s3_bucket.cloudtrail_logs.id}-access-logs"
 }
 
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
@@ -195,10 +197,10 @@ resource "aws_s3_bucket_acl" "log_bucket_acl" {
   acl    = "log-delivery-write"
 }
 
-resource "aws_s3_bucket_logging" "data_bucket" {
-  bucket        = aws_s3_bucket.data_bucket.id
+resource "aws_s3_bucket_logging" "cloudtrail_logs" {
+  bucket        = aws_s3_bucket.cloudtrail_logs.id
   target_bucket = var.s3_bucket.bucket_access_s3_id == null ? aws_s3_bucket.log_bucket[0].id : var.s3_bucket.bucket_access_s3_id
-  target_prefix = "logs/${aws_s3_bucket.data_bucket.id}/"
+  target_prefix = "logs/${aws_s3_bucket.cloudtrail_logs.id}/"
 }
 
 
@@ -209,7 +211,7 @@ resource "aws_s3_bucket_logging" "data_bucket" {
 ## https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/
 ## https://aws.amazon.com/premiumsupport/knowledge-center/s3-bucket-store-kms-encrypted-objects/
 resource "aws_s3_bucket_policy" "core_logging_cloudtrail_mgmt_bucket_name" {
-  bucket = aws_s3_bucket.data_bucket.id
+  bucket = aws_s3_bucket.cloudtrail_logs.id
   policy = data.aws_iam_policy_document.core_logging_cloudtrail_mgmt_bucket_name.json
 }
 
@@ -223,8 +225,8 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
     }
     actions = ["s3:PutObject"]
     resources = [
-      "${aws_s3_bucket.data_bucket.arn}/AWSLogs/*/CloudTrail/*",
-      "${aws_s3_bucket.data_bucket.arn}/AWSLogs/*/*/CloudTrail/*",
+      "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/*/CloudTrail/*",
+      "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/*/*/CloudTrail/*",
     ]
     # DenyIncorrectEncryptionHeader
     condition {
@@ -249,8 +251,8 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
     }
     actions = ["s3:PutObject"]
     resources = [
-      "${aws_s3_bucket.data_bucket.arn}/AWSLogs/*/CloudTrail_Digest/*",
-      "${aws_s3_bucket.data_bucket.arn}/AWSLogs/*/*/CloudTrail_Digest/*",
+      "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/*/CloudTrail_Digest/*",
+      "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/*/*/CloudTrail_Digest/*",
     ]
     # DenyIncorrectEncryptionHeader
     condition {
@@ -268,7 +270,7 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
     actions   = ["s3:GetBucketAcl"]
-    resources = [aws_s3_bucket.data_bucket.arn]
+    resources = [aws_s3_bucket.cloudtrail_logs.arn]
   }
 
   statement {
@@ -280,7 +282,7 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
     }
     actions = ["s3:PutObject"]
     resources = [
-      "${aws_s3_bucket.data_bucket.arn}/AWSLogs/*",
+      "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/*",
     ]
     condition {
       test     = "StringEquals"
