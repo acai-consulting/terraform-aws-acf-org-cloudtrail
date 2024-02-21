@@ -133,7 +133,7 @@ resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
 
 resource "aws_s3_bucket_object_lock_configuration" "cloudtrail_logs" {
   depends_on = [aws_s3_bucket_versioning.cloudtrail_logs]
-  bucket = aws_s3_bucket.cloudtrail_logs.bucket
+  bucket     = aws_s3_bucket.cloudtrail_logs.bucket
   rule {
     default_retention {
       mode = "COMPLIANCE"
