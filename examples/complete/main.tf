@@ -79,7 +79,7 @@ module "example_complete" {
   s3_bucket = {
     bucket_name_prefix = "org-cloudtrail"
     days_to_expiration = 180
-    force_destroy = true
+    force_destroy      = true
   }
   resource_name_prefix = "test-"
   providers = {

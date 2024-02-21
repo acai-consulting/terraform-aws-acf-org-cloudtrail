@@ -138,9 +138,9 @@ data "aws_iam_policy_document" "org_cloudtrail_cloudwatch_logs_trust" {
 }
 
 resource "aws_iam_role_policy" "org_cloudtrail_cloudwatch_logs" {
-  name     = "AllowCloudWatchogGroup"
-  role     = aws_iam_role.org_cloudtrail_cloudwatch_logs.name
-  policy   = data.aws_iam_policy_document.org_cloudtrail_cloudwatch_logs.json
+  name   = "AllowCloudWatchogGroup"
+  role   = aws_iam_role.org_cloudtrail_cloudwatch_logs.name
+  policy = data.aws_iam_policy_document.org_cloudtrail_cloudwatch_logs.json
 }
 
 ## https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-required-policy-for-cloudwatch-logs.html?icmpid=docs_cloudtrail_console

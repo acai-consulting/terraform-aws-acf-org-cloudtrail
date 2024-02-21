@@ -9,12 +9,12 @@ variable "org_cloudtrail_name" {
 variable "cloudwatch_loggroup" {
   description = "Configuration settings for CloudWatch LogGroup."
   type = object({
-    enabled     = optional(string, "foundation-cloudtrail-role") // without prefix
+    enabled           = optional(string, "foundation-cloudtrail-role") // without prefix
     iam_role_name     = optional(string, "foundation-cloudtrail-role") // without prefix
     retention_in_days = optional(number, 3)
     monitoring = optional(object({
       inbound_iam_role_name = optional(string, null)
-      destination_arn   = optional(string, null)
+      destination_arn       = optional(string, null)
     }), null)
   })
   default = null
@@ -28,8 +28,8 @@ variable "cloudwatch_loggroup" {
 
   validation {
     condition = var.cloudwatch_loggroup.monitoring == null ? true : (
-                (var.cloudwatch_loggroup.monitoring.destination_arn == null ? true : 
-                can(regex("^arn:aws:logs:", var.cloudwatch_loggroup.monitoring.destination_arn))))
+      (var.cloudwatch_loggroup.monitoring.destination_arn == null ? true :
+    can(regex("^arn:aws:logs:", var.cloudwatch_loggroup.monitoring.destination_arn))))
     error_message = "If monitoring is specified, destination_arn must contain ARN, starting with 'arn:aws:logs:'."
   }
 }

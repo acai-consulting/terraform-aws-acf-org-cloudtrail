@@ -1,4 +1,4 @@
 output "example" {
   description = "results"
-  value = module.example_complete
+  value       = module.example_complete
 }
