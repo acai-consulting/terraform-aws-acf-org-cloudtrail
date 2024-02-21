@@ -183,13 +183,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "data_bucket_expiration" {
 
 
 resource "aws_s3_bucket" "log_bucket" {
-  count = var.s3_bucket.bucket_access_s3_id != null ? 1 : 0
+  count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
 
   bucket = "${aws_s3_bucket.data_bucket.id}-access-logs"
 }
 
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
-  count = var.s3_bucket.bucket_access_s3_id != null ? 1 : 0
+  count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
 
   bucket = aws_s3_bucket.log_bucket[0].id
   acl    = "log-delivery-write"
@@ -197,7 +197,7 @@ resource "aws_s3_bucket_acl" "log_bucket_acl" {
 
 resource "aws_s3_bucket_logging" "data_bucket" {
   bucket        = aws_s3_bucket.data_bucket.id
-  target_bucket = var.s3_bucket.bucket_access_s3_id != null ? aws_s3_bucket.log_bucket[0].id : var.s3_bucket.bucket_access_s3_id
+  target_bucket = var.s3_bucket.bucket_access_s3_id == null ? aws_s3_bucket.log_bucket[0].id : var.s3_bucket.bucket_access_s3_id
   target_prefix = "logs/${aws_s3_bucket.data_bucket.id}/"
 }
 
