@@ -44,7 +44,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_org_mgmt_account_id"></a> [org\_mgmt\_account\_id](#input\_org\_mgmt\_account\_id) | n/a | `string` | n/a | yes |
-| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name_prefix  = string<br>    days_to_glacier     = optional(number, -1)<br>    days_to_expiration  = number<br>    bucket_access_s3_id = optional(string, null)<br>    force_destroy       = optional(bool, false) // true - for testing only<br>  })</pre> | n/a | yes |
+| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name_prefix  = string<br>    days_to_glacier     = optional(number, -1)<br>    days_to_expiration  = number<br>    bucket_access_s3_id = optional(string, null)<br>    force_destroy       = optional(bool, false) # true - for testing only<br>  })</pre> | n/a | yes |
 | <a name="input_resource_name_prefix"></a> [resource\_name\_prefix](#input\_resource\_name\_prefix) | Alphanumeric suffix for all the resource names in this module. | `string` | `""` | no |
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | A map of tags to assign to the resources in this module. | `map(string)` | `{}` | no |
 
