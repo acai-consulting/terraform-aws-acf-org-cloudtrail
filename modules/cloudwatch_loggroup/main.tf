@@ -104,14 +104,11 @@ data "aws_iam_policy_document" "org_cloudtrail_kms" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
   }
-
-  provider = aws.org_cloudtrail_admin
 }
 
 resource "aws_kms_alias" "org_cloudtrail_kms" {
   name          = "alias/${var.org_cloudtrail_name}-key"
   target_key_id = aws_kms_key.org_cloudtrail_kms.key_id
-  provider      = aws.org_cloudtrail_admin
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
