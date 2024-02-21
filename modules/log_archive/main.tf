@@ -132,6 +132,7 @@ resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
 }
 
 resource "aws_s3_bucket_object_lock_configuration" "cloudtrail_logs" {
+  count      = var.s3_bucket.force_destroy == false ? 1 : 0
   depends_on = [aws_s3_bucket_versioning.cloudtrail_logs]
   bucket     = aws_s3_bucket.cloudtrail_logs.bucket
   rule {
