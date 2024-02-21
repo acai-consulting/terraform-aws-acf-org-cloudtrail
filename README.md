@@ -46,48 +46,50 @@ module "REPLACE_ME" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
+| <a name="provider_aws.core_logging"></a> [aws.core\_logging](#provider\_aws.core\_logging) | >= 5.0 |
+| <a name="provider_aws.org_cloudtrail_admin"></a> [aws.org\_cloudtrail\_admin](#provider\_aws.org\_cloudtrail\_admin) | >= 5.0 |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#module\_cloudwatch\_loggroup) | ./modules/cloudwatch_loggroup | n/a |
+| <a name="module_log_archive_bucket"></a> [log\_archive\_bucket](#module\_log\_archive\_bucket) | ./modules/log_archive | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aws_organizations_organizational_unit.level_1_ous](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit) | resource |
-| [aws_organizations_organizational_unit.level_2_ous](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit) | resource |
-| [aws_organizations_organizational_unit.level_3_ous](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit) | resource |
-| [aws_organizations_organizational_unit.level_4_ous](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit) | resource |
-| [aws_organizations_organizational_unit.level_5_ous](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_organizational_unit) | resource |
-| [aws_organizations_organization.organization](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/organizations_organization) | data source |
+| [aws_cloudtrail.org_cloudtrail_mgmt](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail) | resource |
+| [aws_caller_identity.core_logging](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_caller_identity.org_cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_region.org_cloudtrail](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | The organization with the tree of organizational units and their tags. | <pre>object({<br>    level1_units = optional(list(object({<br>      name = string,<br>      tags = optional(map(string), {}),<br>      level2_units = optional(list(object({<br>        name = string,<br>        tags = optional(map(string), {}),<br>        level3_units = optional(list(object({<br>          name = string,<br>          tags = optional(map(string), {}),<br>          level4_units = optional(list(object({<br>            name = string,<br>            tags = optional(map(string), {}),<br>            level5_units = optional(list(object({<br>              name = string,<br>              tags = optional(map(string), {}),<br>            })), [])<br>          })), [])<br>        })), [])<br>      })), [])<br>    })), [])<br>  })</pre> | `{}` | no |
+| <a name="input_org_cloudtrail_name"></a> [org\_cloudtrail\_name](#input\_org\_cloudtrail\_name) | Name of the Organization CloudTrail. | `string` | n/a | yes |
+| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name_prefix  = string<br>    days_to_glacier     = optional(number, -1)<br>    days_to_expiration  = number<br>    bucket_access_s3_id = optional(string, null)<br>    force_destroy       = optional(bool, false) // true - for testing only<br>  })</pre> | n/a | yes |
+| <a name="input_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#input\_cloudwatch\_loggroup) | Configuration settings for CloudWatch LogGroup. | <pre>object({<br>    enabled           = optional(string, "foundation-cloudtrail-role") // without prefix<br>    iam_role_name     = optional(string, "foundation-cloudtrail-role") // without prefix<br>    retention_in_days = optional(number, 3)<br>    monitoring = optional(object({<br>      inbound_iam_role_name = optional(string, null)<br>      destination_arn       = optional(string, null)<br>    }), null)<br>  })</pre> | `null` | no |
+| <a name="input_iam_role_path"></a> [iam\_role\_path](#input\_iam\_role\_path) | Path of the IAM role. | `string` | `null` | no |
+| <a name="input_iam_role_permissions_boundary_arn"></a> [iam\_role\_permissions\_boundary\_arn](#input\_iam\_role\_permissions\_boundary\_arn) | ARN of the policy that is used to set the permissions boundary for all IAM roles of the module. | `string` | `null` | no |
+| <a name="input_resource_name_prefix"></a> [resource\_name\_prefix](#input\_resource\_name\_prefix) | Alphanumeric suffix for all the resource names in this module. | `string` | `""` | no |
+| <a name="input_resource_name_suffix"></a> [resource\_name\_suffix](#input\_resource\_name\_suffix) | Alphanumeric suffix for all the resource names in this module. | `string` | `""` | no |
+| <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | A map of tags to assign to the resources in this module. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_level_1_ous_details"></a> [level\_1\_ous\_details](#output\_level\_1\_ous\_details) | Details of Level 1 Organizational Units. |
-| <a name="output_level_2_ous_details"></a> [level\_2\_ous\_details](#output\_level\_2\_ous\_details) | Details of Level 2 Organizational Units. |
-| <a name="output_level_3_ous_details"></a> [level\_3\_ous\_details](#output\_level\_3\_ous\_details) | Details of Level 3 Organizational Units. |
-| <a name="output_level_4_ous_details"></a> [level\_4\_ous\_details](#output\_level\_4\_ous\_details) | Details of Level 4 Organizational Units. |
-| <a name="output_level_5_ous_details"></a> [level\_5\_ous\_details](#output\_level\_5\_ous\_details) | Details of Level 5 Organizational Units. |
-| <a name="output_organization_id"></a> [organization\_id](#output\_organization\_id) | The ID of the AWS Organization. |
-| <a name="output_ou_transformed"></a> [ou\_transformed](#output\_ou\_transformed) | List of transformed OUs. |
-| <a name="output_root_ou_id"></a> [root\_ou\_id](#output\_root\_ou\_id) | The ID of the root organizational unit. |
+| <a name="output_core_parameter_to_write"></a> [core\_parameter\_to\_write](#output\_core\_parameter\_to\_write) | This must be in sync with the Account Baselining |
 <!-- END_TF_DOCS -->
 
 <!-- AUTHORS -->
