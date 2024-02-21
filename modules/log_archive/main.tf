@@ -114,12 +114,6 @@ resource "aws_s3_bucket_ownership_controls" "cloudtrail_logs" {
   }
 }
 
-resource "aws_s3_bucket_acl" "cloudtrail_logs" {
-  depends_on = [aws_s3_bucket_ownership_controls.cloudtrail_logs]
-  bucket     = aws_s3_bucket.cloudtrail_logs.id
-  acl        = "log-delivery-write"
-}
-
 resource "aws_s3_bucket_public_access_block" "cloudtrail_logs" {
   bucket = aws_s3_bucket.cloudtrail_logs.id
 
@@ -138,6 +132,7 @@ resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
 }
 
 resource "aws_s3_bucket_object_lock_configuration" "cloudtrail_logs" {
+  depends_on = [aws_s3_bucket_versioning.cloudtrail_logs]
   bucket = aws_s3_bucket.cloudtrail_logs.bucket
   rule {
     default_retention {
@@ -157,25 +152,21 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs_c
   }
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_galcier" {
-  count = var.s3_bucket.days_to_glacier != -1 ? 1 : 0
-
+resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_lifecycle" {
   bucket = aws_s3_bucket.cloudtrail_logs.id
+
   rule {
-    id     = "Glacier"
+    id     = "log"
     status = "Enabled"
-    transition {
-      days          = var.s3_bucket.days_to_glacier
-      storage_class = "GLACIER"
+
+    # Only add the transition rule if days_to_glacier is not -1
+    dynamic "transition" {
+      for_each = var.s3_bucket.days_to_glacier != -1 ? [1] : []
+      content {
+        days          = var.s3_bucket.days_to_glacier
+        storage_class = "GLACIER"
+      }
     }
-  }
-}
-
-resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_expiration" {
-  bucket = aws_s3_bucket.cloudtrail_logs.id
-  rule {
-    id     = "Expiration"
-    status = "Enabled"
 
     expiration {
       days = var.s3_bucket.days_to_expiration
