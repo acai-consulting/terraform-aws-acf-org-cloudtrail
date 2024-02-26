@@ -98,3 +98,9 @@ variable "resource_name_suffix" {
   }
 }
 */
+
+variable "core_configuration_cluster_name" {
+  description = "Cluster name for the Core Configuration map."
+  type        = string
+  default     = "security"
+}
