@@ -5,7 +5,7 @@ output "core_configuration_to_write" {
     local.core_configuration_to_write
     ) : (
     {
-      var.core_configuration_cluster_name = local.core_configuration_to_write
+      "${var.core_configuration_cluster_name}" = local.core_configuration_to_write
     }
   )
 }
