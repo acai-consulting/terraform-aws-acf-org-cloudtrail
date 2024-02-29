@@ -10,7 +10,7 @@ on:
 
 jobs:
   tfc-module-test:
-    uses: acai-consulting/github-terraform-workflows/.github/workflows/tfc-module-test.yml@main
+    uses: acai-consulting/github-terraform-workflows/.github/workflows/tfc-module-test.yml@fix
     if: ${{ github.event_name == 'pull_request' }}
     with:
       tflint_config_repo: "acai-consulting/github-tflint-config"
@@ -28,7 +28,7 @@ jobs:
       AWS_TESTBED_DEFAULT_REGION: ${{ secrets.AWS_TESTBED_DEFAULT_REGION }}
 
   tfc-module-release:
-    uses: acai-consulting/github-terraform-workflows/.github/workflows/tfc-module-release.yml@main
+    uses: acai-consulting/github-terraform-workflows/.github/workflows/tfc-module-release.yml@fix
     if: ${{ github.event_name == 'push' }}
     secrets:
       GHE_API_TOKEN: ${{ secrets.GHE_API_TOKEN }}
