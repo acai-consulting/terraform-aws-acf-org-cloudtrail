@@ -46,7 +46,7 @@ module "REPLACE_ME" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
@@ -76,6 +76,7 @@ module "REPLACE_ME" {
 | <a name="input_org_cloudtrail_name"></a> [org\_cloudtrail\_name](#input\_org\_cloudtrail\_name) | Name of the Organization CloudTrail. | `string` | n/a | yes |
 | <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name_prefix  = string<br>    days_to_glacier     = optional(number, -1)<br>    days_to_expiration  = number<br>    bucket_access_s3_id = optional(string, null)<br>    force_destroy       = optional(bool, false) # true - for testing only<br>  })</pre> | n/a | yes |
 | <a name="input_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#input\_cloudwatch\_loggroup) | Configuration settings for CloudWatch LogGroup. | <pre>object({<br>    iam_role_name     = optional(string, "cloudtrail-role") # without prefix<br>    iam_role_path     = optional(string, "/")               # without prefix<br>    iam_role_pb       = optional(string, null)<br>    retention_in_days = optional(number, 3)<br>    monitoring = optional(object({<br>      inbound_iam_role_name = optional(string, null)<br>      destination_arn       = optional(string, null)<br>    }), null)<br>  })</pre> | `null` | no |
+| <a name="input_core_configuration_cluster_name"></a> [core\_configuration\_cluster\_name](#input\_core\_configuration\_cluster\_name) | Cluster name for the Core Configuration map. | `string` | `"security"` | no |
 | <a name="input_resource_name_prefix"></a> [resource\_name\_prefix](#input\_resource\_name\_prefix) | Alphanumeric suffix for all the resource names in this module. | `string` | `""` | no |
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | A map of tags to assign to the resources in this module. | `map(string)` | `{}` | no |
 
@@ -83,7 +84,7 @@ module "REPLACE_ME" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_core_parameter_to_write"></a> [core\_parameter\_to\_write](#output\_core\_parameter\_to\_write) | This must be in sync with the Account Baselining |
+| <a name="output_core_configuration_to_write"></a> [core\_configuration\_to\_write](#output\_core\_configuration\_to\_write) | This must be in sync with the Account Baselining |
 <!-- END_TF_DOCS -->
 
 <!-- AUTHORS -->
