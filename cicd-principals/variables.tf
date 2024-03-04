@@ -10,14 +10,14 @@ variable "cloudwatch_loggroup" {
 variable "s3_bucket" {
   description = "Configuration settings for core logging."
   type = object({
-    bucket_name           = string
-    bucket_name_prefix    = string
+    bucket_name        = string
+    bucket_name_prefix = string
   })
 }
 
 variable "bucket_notification_to_sns" {
   type = object({
-    sns_name            = string
+    sns_name = string
   })
 }
 
