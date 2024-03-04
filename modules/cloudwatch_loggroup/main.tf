@@ -2,8 +2,8 @@
 # ¦ REQUIREMENTS
 # ---------------------------------------------------------------------------------------------------------------------
 terraform {
-  # This module is only being tested with Terraform 0.15.x and newer.
-  required_version = ">= 1.3.0"
+  # This module is only being tested with Terraform 1.3.9 and newer.
+  required_version = ">= 1.3.9"
 
   required_providers {
     aws = {
@@ -27,7 +27,7 @@ data "aws_region" "org_cloudtrail" {}
 # ---------------------------------------------------------------------------------------------------------------------
 #https://github.com/cloudposse/terraform-aws-cloudtrail-cloudwatch-alarms/issues/2
 resource "aws_cloudwatch_log_group" "org_cloudtrail_cloudwatch_loggroup" {
-  name              = var.org_cloudtrail_name
+  name              = var.cloudwatch_loggroup.loggroup_name
   retention_in_days = var.cloudwatch_loggroup.retention_in_days == -1 ? null : var.cloudwatch_loggroup.retention_in_days
   kms_key_id        = aws_kms_key.org_cloudtrail_kms.arn
 }
@@ -86,7 +86,7 @@ data "aws_iam_policy_document" "org_cloudtrail_kms" {
           "arn:aws:logs:%s:%s:log-group:%s",
           data.aws_region.org_cloudtrail.name,
           data.aws_caller_identity.org_cloudtrail.account_id,
-          var.org_cloudtrail_name
+          aws_cloudwatch_log_group.org_cloudtrail_cloudwatch_loggroup.name
         )
       ]
     }
@@ -107,7 +107,7 @@ data "aws_iam_policy_document" "org_cloudtrail_kms" {
 }
 
 resource "aws_kms_alias" "org_cloudtrail_kms" {
-  name          = "alias/${var.org_cloudtrail_name}-key"
+  name          = "alias/${aws_cloudwatch_log_group.org_cloudtrail_cloudwatch_loggroup.name}-key"
   target_key_id = aws_kms_key.org_cloudtrail_kms.key_id
 }
 

@@ -1,0 +1,120 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "IAM Role used to provision Org CloudTrail"
+
+Resources:
+  OrgCloudTrailProvisioningRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "$${target_principal_role_name}"
+      Path: "$${target_principal_role_path}"
+      Description: "IAM Role used to provision the Organization CloudTrail and an optional CloudWatch LogGroup"
+$${resource_tags_block}
+      AssumeRolePolicyDocument:
+        #add trust policy here
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              "AWS":
+                - "$${trustee_role_arn}"
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: "SecurityOrgCloudTrailProvisioning"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: KMSStar
+                Effect: Allow
+                Action:
+                  - kms:Create*
+                  - kms:Describe*
+                  - kms:List*
+                  - kms:Get*
+                  - kms:TagResource
+                  - kms:UntagResource
+                Resource: "*"
+              - Sid: KMSSemper
+                Effect: Allow
+                Action:
+                  - kms:CancelKeyDeletion
+                  - kms:ConnectCustomKeyStore
+                  - kms:Decrypt
+                  - kms:Delete*
+                  - kms:Disable*
+                  - kms:DisconnectCustomKeyStore
+                  - kms:Enable*
+                  - kms:Encrypt
+                  - kms:Generate*
+                  - kms:ImportKeyMaterial
+                  - kms:PutKeyPolicy
+                  - kms:ReEncrypt*
+                  - kms:ReplicateKey
+                  - kms:RetireGrant
+                  - kms:RevokeGrant
+                  - kms:ScheduleKeyDeletion
+                  - kms:Sign
+                  - kms:SynchronizeMultiRegionKey
+                  - kms:Update*
+                  - kms:Verify
+                Resource: "*"
+                Condition:
+                  StringLike:                
+                    kms:RequestAlias: "alias/${cloudwatch_loggroup_name}-key"
+              - Sid: AllowIAM
+                Effect: Allow
+                Action:
+                  - iam:Get*
+                  - iam:List*
+                  - iam:Describe*
+                  - iam:CreateServiceLinkedRole
+                Resource: "*"
+              - Sid: AllowIAMStar
+                Effect: Allow
+                Action:
+                  - iam:DetachRolePolicy
+                  - iam:AttachRolePolicy
+                  - iam:DeleteRolePolicy
+                  - iam:Delete*
+                  - iam:PassRole
+                  - iam:CreateRole
+                  - iam:PutRolePolicy
+                  - iam:PutRolePolicy
+                  - iam:TagRole
+                  - iam:Update*
+                Resource:
+                  - !Sub "arn:aws:iam::$$$${AWS::AccountId}:role${cloudwatch_role_name_with_path}"
+              - Sid: AllowCloudTrail
+                Effect: Allow
+                Action:
+                  - cloudtrail:UpdateTrail
+                  - cloudtrail:CreateTrail
+                  - cloudtrail:DescribeTrails
+                  - cloudtrail:GetTrail
+                  - cloudtrail:GetTrailStatus
+                  - cloudtrail:GetEventSelectors
+                  - cloudtrail:AddTags
+                  - cloudtrail:ListTags
+                  - cloudtrail:RemoveTags
+                Resource: "*"
+              - Sid: AllowCloudTrailLogs
+                Effect: Allow
+                Action:
+                  - logs:Create*
+                  - logs:AssociateKmsKey
+                  - logs:DisassociateKmsKey
+                  - logs:Describe*
+                  - logs:List*
+                  - logs:ListTagsLogGroup
+                  - logs:Get*
+                  - logs:Delete*
+                  - logs:PutRetentionPolicy
+                  - logs:TagLogGroup
+                  - logs:UntagLogGroup
+                Resource:
+                  - !Sub "arn:aws:logs:$$$${AWS::Region}:$$$${AWS::AccountId}:log-group:${cloudwatch_loggroup_name}"
+                  - !Sub "arn:aws:logs:$$$${AWS::Region}:$$$${AWS::AccountId}:log-group:${cloudwatch_loggroup_name}:*"
+              - Sid: AllowLogsStar
+                Effect: Allow
+                Action:
+                  - logs:DescribeLogGroups
+                Resource: "*"

@@ -2,8 +2,8 @@
 # ¦ REQUIREMENTS
 # ---------------------------------------------------------------------------------------------------------------------
 terraform {
-  # This module is only being tested with Terraform 0.15.x and newer.
-  required_version = ">= 1.3.0"
+  # This module is only being tested with Terraform 1.3.9 and newer.
+  required_version = ">= 1.3.9"
 
   required_providers {
     aws = {
@@ -11,7 +11,7 @@ terraform {
       version = ">= 5.0"
       configuration_aliases = [
         aws.org_cloudtrail_admin,
-        aws.core_logging
+        aws.org_cloudtrail_bucket
       ]
     }
   }
@@ -48,9 +48,8 @@ module "log_archive_bucket" {
   s3_bucket            = var.s3_bucket
   org_mgmt_account_id  = data.aws_caller_identity.org_cloudtrail.account_id
   resource_tags        = var.resource_tags
-  resource_name_prefix = var.resource_name_prefix
   providers = {
-    aws = aws.core_logging
+    aws = aws.org_cloudtrail_bucket
   }
 }
 
@@ -61,7 +60,6 @@ module "cloudwatch_loggroup" {
   org_cloudtrail_name  = var.org_cloudtrail_name
   cloudwatch_loggroup  = var.cloudwatch_loggroup
   resource_tags        = var.resource_tags
-  resource_name_prefix = var.resource_name_prefix
   providers = {
     aws = aws.org_cloudtrail_admin
   }

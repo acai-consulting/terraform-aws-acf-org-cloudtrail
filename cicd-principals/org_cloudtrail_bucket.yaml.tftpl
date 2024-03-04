@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "IAM Role used to provision SEMPER Logging bucket"
+
+Resources:
+  # ¦ SemperProvisioningRole
+  OrgCloudTrailBucketProvisioningRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "$${target_principal_role_name}"
+      Path: "$${target_principal_role_path}"
+      Description: "IAM Role used to provision the Organization CloudTrail and an optional CloudWatch LogGroup"
+$${resource_tags_block}
+      AssumeRolePolicyDocument:
+        #add trust policy here
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              "AWS":
+                - "$${trustee_role_arn}"
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: "SemperProvisioning"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: KMSStar
+                Effect: Allow
+                Action:
+                  - kms:Create*
+                  - kms:Describe*
+                  - kms:List*
+                  - kms:Get*
+                  - kms:TagResource
+                  - kms:UntagResource
+                Resource: "*"

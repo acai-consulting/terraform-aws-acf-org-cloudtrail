@@ -9,8 +9,9 @@ variable "org_cloudtrail_name" {
 variable "cloudwatch_loggroup" {
   description = "Configuration settings for CloudWatch LogGroup."
   type = object({
-    iam_role_name     = optional(string, "cloudtrail-role") # without prefix
-    iam_role_path     = optional(string, "/")               # without prefix
+    loggroup_name     = optional(string, "org-cloudtrail-logs")
+    iam_role_name     = optional(string, "cloudtrail-role")     
+    iam_role_path     = optional(string, "/")                   
     iam_role_pb       = optional(string, null)
     retention_in_days = optional(number, 3)
     monitoring = optional(object({
@@ -43,16 +44,23 @@ variable "cloudwatch_loggroup" {
 variable "s3_bucket" {
   description = "Configuration settings for core logging."
   type = object({
-    bucket_name_prefix  = string
-    days_to_glacier     = optional(number, -1)
-    days_to_expiration  = number
-    bucket_access_s3_id = optional(string, null)
-    force_destroy       = optional(bool, false) # true - for testing only
+    bucket_name           = optional(string, null)
+    bucket_name_prefix    = optional(string, null)
+    days_to_glacier       = optional(number, -1)
+    days_to_expiration    = number
+    bucket_access_s3_id   = optional(string, null)
+    force_destroy         = optional(bool, false) # true - for testing only
+    reader_principal_arns = optional(list(sting), [])
   })
 
   validation {
-    condition     = can(regex("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name_prefix))
-    error_message = "The s3_bucket_prefix must only contain alphanumeric characters and hyphens."
+    condition     = (var.s3_bucket.bucket_name != null && length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name)) > 0) || (var.s3_bucket.bucket_name_prefix != null && length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name_prefix)) > 0)
+    error_message = "Both bucket_name and bucket_name_prefix must only contain alphanumeric characters and hyphens, if provided."
+  }
+
+  validation {
+    condition     = (length(var.s3_bucket.bucket_name) > 0 && var.s3_bucket.bucket_name_prefix == null) || (var.s3_bucket.bucket_name == null && length(var.s3_bucket.bucket_name_prefix) > 0)
+    error_message = "Either bucket_name or bucket_name_prefix must be provided, but not both."
   }
 
   validation {
@@ -76,16 +84,6 @@ variable "resource_tags" {
   default     = {}
 }
 
-variable "resource_name_prefix" {
-  description = "Alphanumeric suffix for all the resource names in this module."
-  type        = string
-  default     = ""
-
-  validation {
-    condition     = var.resource_name_prefix == "" ? true : can(regex("[[:alnum:]]", var.resource_name_prefix))
-    error_message = "Value must be alphanumeric."
-  }
-}
 /*
 variable "resource_name_suffix" {
   description = "Alphanumeric suffix for all the resource names in this module."

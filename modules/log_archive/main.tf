@@ -2,8 +2,8 @@
 # ¦ REQUIREMENTS
 # ---------------------------------------------------------------------------------------------------------------------
 terraform {
-  # This module is only being tested with Terraform 0.15.x and newer.
-  required_version = ">= 1.3.0"
+  # This module is only being tested with Terraform 1.3.9 and newer.
+  required_version = ">= 1.3.9"
 
   required_providers {
     aws = {
@@ -18,17 +18,11 @@ terraform {
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ DATA
 # ---------------------------------------------------------------------------------------------------------------------
-data "aws_caller_identity" "core_logging" {}
+data "aws_caller_identity" "org_cloudtrail_bucket_target" {}
+
 
 # ---------------------------------------------------------------------------------------------------------------------
-# ¦ LOCALS
-# ---------------------------------------------------------------------------------------------------------------------
-locals {
-  bucket_name_prefix = "${var.resource_name_prefix}${var.s3_bucket.bucket_name_prefix}"
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# ¦ CORE LOGGING - KMS KEY
+# ¦ KMS KEY
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_kms_key" "core_logging_cloudtrail_mgmt_kms" {
   description             = "encryption key for object uploads to ${aws_s3_bucket.cloudtrail_logs.id}"
@@ -51,7 +45,7 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_kms" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.core_logging.account_id}:root"]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.org_cloudtrail_bucket_target.account_id}:root"]
     }
 
     actions   = ["kms:*"]
@@ -99,10 +93,11 @@ resource "aws_kms_alias" "core_logging_cloudtrail_mgmt_kms" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# ¦ CORE LOGGING - S3 BUCKET
+# ¦ S3 BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket" "cloudtrail_logs" {
-  bucket_prefix = local.bucket_name_prefix
+  bucket        = var.s3_bucket.bucket_name
+  bucket_prefix = var.s3_bucket.bucket_name_prefix
   force_destroy = var.s3_bucket.force_destroy
   tags          = var.resource_tags
 }
@@ -201,7 +196,7 @@ resource "aws_s3_bucket_logging" "cloudtrail_logs" {
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# ¦ CORE LOGGING - S3 BUCKET POLICY
+# ¦ S3 BUCKET POLICY
 # ---------------------------------------------------------------------------------------------------------------------
 ## https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create-s3-bucket-policy-for-cloudtrail.html
 ## https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/
@@ -285,5 +280,86 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
       variable = "s3:x-amz-acl"
       values   = ["bucket-owner-full-control"]
     }
+  }
+
+  dynamic "statement" {
+    for_each = length(var.s3_bucket.reader_principal_arns) > 0 ? [1] : []
+
+    content {
+      sid    = "ReaderPrincipals"
+      effect = "Allow"
+      actions = [
+        "s3:GetObject"
+      ]
+      principals {
+        type        = "AWS"
+        identifiers = var.s3_bucket.reader_principal_arns
+      }
+      resources = [
+        aws_s3_bucket.cloudtrail_logs.arn,
+        "${aws_s3_bucket.cloudtrail_logs.arn}/*"
+      ]
+    }
+  }
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# ¦ S3 BUCKET NOTIFICATION
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+
+  topic {
+    id        = "notification_to_sns"
+    topic_arn = aws_sns_topic.s3_notification_sns.arn
+    events    = ["s3:ObjectCreated:*"]
+  }
+}
+
+resource "aws_sns_topic" "s3_notification_sns" {
+  name = var.bucket_notification_to_sns.sns_name
+  tags = var.resource_tags
+}
+
+resource "aws_sns_topic_policy" "s3_notification_sns" {
+  arn      = aws_sns_topic.s3_notification_sns.arn
+  policy   = data.aws_iam_policy_document.s3_notification_sns.json
+}
+
+data "aws_iam_policy_document" "s3_notification_sns" {
+  statement {
+    sid     = "AllowedPublishers"
+    actions = ["sns:Publish"]
+    effect  = "Allow"
+    principals {
+      type = "Service"
+      identifiers = [
+        "s3.amazonaws.com"
+      ]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.org_cloudtrail_bucket_target.account_id]
+    }
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+      values = [
+        aws_s3_bucket.cloudtrail_logs.id
+      ]
+    }
+    resources = [aws_sns_topic.s3_notification_sns.arn]
+  }
+  statement {
+    sid     = "AllowedSubscribers"
+    actions = ["sns:Subscribe"]
+    effect  = "Allow"
+    principals {
+      type = "AWS"
+      identifiers = var.bucket_notification_to_sns.allowed_subscribers
+    }
+    resources = [aws_sns_topic.s3_notification_sns.arn]
   }
 }
