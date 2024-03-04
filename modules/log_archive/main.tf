@@ -365,7 +365,7 @@ data "aws_iam_policy_document" "s3_notification_sns" {
     actions = ["sns:Subscribe"]
     effect  = "Allow"
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = var.bucket_notification_to_sns.allowed_subscribers
     }
     resources = [aws_sns_topic.s3_notification_sns[0].arn]

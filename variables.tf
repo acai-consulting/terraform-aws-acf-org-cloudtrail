@@ -10,8 +10,8 @@ variable "cloudwatch_loggroup" {
   description = "Configuration settings for CloudWatch LogGroup."
   type = object({
     loggroup_name     = optional(string, "org-cloudtrail-logs")
-    iam_role_name     = optional(string, "cloudtrail-role")     
-    iam_role_path     = optional(string, "/")                   
+    iam_role_name     = optional(string, "cloudtrail-role")
+    iam_role_path     = optional(string, "/")
     iam_role_pb       = optional(string, null)
     retention_in_days = optional(number, 3)
     monitoring = optional(object({
