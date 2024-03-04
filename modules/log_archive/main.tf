@@ -323,8 +323,8 @@ resource "aws_sns_topic" "s3_notification_sns" {
 }
 
 resource "aws_sns_topic_policy" "s3_notification_sns" {
-  arn      = aws_sns_topic.s3_notification_sns.arn
-  policy   = data.aws_iam_policy_document.s3_notification_sns.json
+  arn    = aws_sns_topic.s3_notification_sns.arn
+  policy = data.aws_iam_policy_document.s3_notification_sns.json
 }
 
 data "aws_iam_policy_document" "s3_notification_sns" {
@@ -357,7 +357,7 @@ data "aws_iam_policy_document" "s3_notification_sns" {
     actions = ["sns:Subscribe"]
     effect  = "Allow"
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = var.bucket_notification_to_sns.allowed_subscribers
     }
     resources = [aws_sns_topic.s3_notification_sns.arn]
