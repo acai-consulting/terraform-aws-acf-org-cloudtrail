@@ -303,31 +303,38 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
   }
 }
 
-
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ S3 BUCKET NOTIFICATION
 # ---------------------------------------------------------------------------------------------------------------------
-resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = aws_s3_bucket.cloudtrail_logs.id
-
-  topic {
-    id        = "notification_to_sns"
-    topic_arn = aws_sns_topic.s3_notification_sns.arn
-    events    = ["s3:ObjectCreated:*"]
-  }
-}
-
 resource "aws_sns_topic" "s3_notification_sns" {
+  count = var.bucket_notification_to_sns != null ? 1 : 0
+
   name = var.bucket_notification_to_sns.sns_name
   tags = var.resource_tags
 }
 
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  count = var.bucket_notification_to_sns != null ? 1 : 0
+
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+
+  topic {
+    id        = "notification_to_sns"
+    topic_arn = aws_sns_topic.s3_notification_sns[0].arn
+    events    = ["s3:ObjectCreated:*"]
+  }
+}
+
 resource "aws_sns_topic_policy" "s3_notification_sns" {
-  arn      = aws_sns_topic.s3_notification_sns.arn
-  policy   = data.aws_iam_policy_document.s3_notification_sns.json
+  count = var.bucket_notification_to_sns != null ? 1 : 0
+
+  arn    = aws_sns_topic.s3_notification_sns[0].arn
+  policy = data.aws_iam_policy_document.s3_notification_sns[0].json
 }
 
 data "aws_iam_policy_document" "s3_notification_sns" {
+  count = var.bucket_notification_to_sns != null ? 1 : 0
+
   statement {
     sid     = "AllowedPublishers"
     actions = ["sns:Publish"]
@@ -347,11 +354,12 @@ data "aws_iam_policy_document" "s3_notification_sns" {
       test     = "ArnLike"
       variable = "aws:SourceArn"
       values = [
-        aws_s3_bucket.cloudtrail_logs.id
+        aws_s3_bucket.cloudtrail_logs.arn
       ]
     }
-    resources = [aws_sns_topic.s3_notification_sns.arn]
+    resources = [aws_sns_topic.s3_notification_sns[0].arn]
   }
+
   statement {
     sid     = "AllowedSubscribers"
     actions = ["sns:Subscribe"]
@@ -360,6 +368,6 @@ data "aws_iam_policy_document" "s3_notification_sns" {
       type = "AWS"
       identifiers = var.bucket_notification_to_sns.allowed_subscribers
     }
-    resources = [aws_sns_topic.s3_notification_sns.arn]
+    resources = [aws_sns_topic.s3_notification_sns[0].arn]
   }
 }
