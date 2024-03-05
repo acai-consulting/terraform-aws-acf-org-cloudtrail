@@ -20,7 +20,7 @@ variable "cloudwatch_loggroup" {
     }), null)
   })
   default = null
-/*
+  /*
   validation {
     condition = var.cloudwatch_loggroup == null ? true : (
       contains(
