@@ -53,7 +53,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_bucket_arn"></a> [bucket\_arn](#output\_bucket\_arn) | n/a |
-| <a name="output_bucket_id"></a> [bucket\_id](#output\_bucket\_id) | n/a |
-| <a name="output_kms_cmk_arn"></a> [kms\_cmk\_arn](#output\_kms\_cmk\_arn) | n/a |
+| <a name="output_bucket_arn"></a> [bucket\_arn](#output\_bucket\_arn) | ARN of the CloudTrail bucket |
+| <a name="output_bucket_id"></a> [bucket\_id](#output\_bucket\_id) | Bucket ID of the CloudTrail bucket |
+| <a name="output_kms_cmk_arn"></a> [kms\_cmk\_arn](#output\_kms\_cmk\_arn) | ARN of the KMS CMK for encrypting the logs |
 <!-- END_TF_DOCS -->
