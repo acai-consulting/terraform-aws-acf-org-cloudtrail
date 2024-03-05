@@ -7,7 +7,7 @@ variable "s3_bucket" {
     days_to_expiration    = number
     bucket_access_s3_id   = string
     force_destroy         = bool
-    reader_principal_arns = list(sting)
+    reader_principal_arns = list(string)
   })
 }
 
