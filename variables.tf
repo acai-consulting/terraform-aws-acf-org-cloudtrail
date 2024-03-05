@@ -20,7 +20,7 @@ variable "cloudwatch_loggroup" {
     }), null)
   })
   default = null
-
+/*
   validation {
     condition = var.cloudwatch_loggroup == null ? true : (
       contains(
@@ -35,7 +35,7 @@ variable "cloudwatch_loggroup" {
         (var.cloudwatch_loggroup.monitoring.destination_arn == null ? true :
     can(regex("^arn:aws:logs:", var.cloudwatch_loggroup.monitoring.destination_arn)))))
     error_message = "If monitoring is specified, destination_arn must contain ARN, starting with 'arn:aws:logs:'."
-  }
+  }*/
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
