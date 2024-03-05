@@ -29,7 +29,7 @@ data "aws_caller_identity" "org_cloudtrail" {
 # ---------------------------------------------------------------------------------------------------------------------
 locals {
   core_configuration_to_write = {
-     "${var.core_configuration_cluster_name}" = {
+    "${var.core_configuration_cluster_name}" = {
       "org_cloudtrail" = {
         cloudtrail_admin = {
           org_cloudtrail_name = var.org_cloudtrail_name
@@ -37,7 +37,7 @@ locals {
         }
         cloudtrail_bucket = module.log_archive_bucket
       }
-     }
+    }
   }
 }
 
