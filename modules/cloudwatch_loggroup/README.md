@@ -43,6 +43,6 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_iam_role_arn"></a> [iam\_role\_arn](#output\_iam\_role\_arn) | n/a |
-| <a name="output_kms_key_arn"></a> [kms\_key\_arn](#output\_kms\_key\_arn) | n/a |
+| <a name="output_kms_cmk_arn"></a> [kms\_cmk\_arn](#output\_kms\_cmk\_arn) | n/a |
 | <a name="output_loggroup_arn"></a> [loggroup\_arn](#output\_loggroup\_arn) | n/a |
 <!-- END_TF_DOCS -->
