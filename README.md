@@ -89,13 +89,11 @@ module "REPLACE_ME" {
 <!-- AUTHORS -->
 ## Authors
 
-This module is maintained by [ACAI GmbH][acai-url] with help from [these amazing contributors][contributors-url]
+This module is maintained by [ACAI GmbH][acai-url]
 
 <!-- LICENSE -->
 ## License
 
-This module is licensed under Apache 2.0
-<br />
 See [LICENSE][license-url] for full details
 
 <!-- COPYRIGHT -->
@@ -114,4 +112,3 @@ See [LICENSE][license-url] for full details
 [contributors-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/graphs/contributors
 [license-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/tree/main/LICENSE
 [terraform-url]: https://www.terraform.io
-[aws-url]: https://aws.amazon.comterraform-aws-acf-ou-mgmt/tree/main/examples/complete
