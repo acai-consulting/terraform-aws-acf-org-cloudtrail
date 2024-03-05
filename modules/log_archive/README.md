@@ -47,8 +47,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_org_mgmt_account_id"></a> [org\_mgmt\_account\_id](#input\_org\_mgmt\_account\_id) | n/a | `string` | n/a | yes |
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | A map of tags to assign to the resources in this module. | `map(string)` | n/a | yes |
-| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name           = string<br>    bucket_name_prefix    = string<br>    days_to_glacier       = number<br>    days_to_expiration    = number<br>    bucket_access_s3_id   = string<br>    force_destroy         = bool<br>    reader_principal_arns = list(string)<br>  })</pre> | n/a | yes |
-| <a name="input_bucket_notification_to_sns"></a> [bucket\_notification\_to\_sns](#input\_bucket\_notification\_to\_sns) | n/a | <pre>object({<br>    sns_name            = optional(string, "org-cloudtrail-bucket-notification")<br>    allowed_subscribers = list(string)<br>  })</pre> | `null` | no |
+| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name           = string<br>    bucket_name_prefix    = string<br>    days_to_glacier       = number<br>    days_to_expiration    = number<br>    bucket_access_s3_id   = string<br>    force_destroy         = bool<br>    reader_principal_arns = list(string)<br>    notification_to_sns = optional(object({<br>      sns_name            = optional(string, "org-cloudtrail-bucket-notification")<br>      allowed_subscribers = list(string)<br>    }), null)<br>  })</pre> | n/a | yes |
 
 ## Outputs
 
