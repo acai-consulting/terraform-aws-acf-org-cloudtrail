@@ -24,31 +24,6 @@ $${resource_tags_block}
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              - Sid: KMSStar
-                Effect: Allow
-                Action:
-                  - kms:*
-                  - kms:Create*
-                  - kms:Describe*
-                  - kms:List*
-                  - kms:Get*
-                  - kms:TagResource
-                  - kms:UntagResource
-                Resource: "*"
-              - Sid: KMSSemperCloudWachtLogs1
-                Effect: Allow
-                Action:
-                  - kms:*
-                Resource: "*"
-                Condition:
-                  StringLike:                
-                    kms:RequestAlias: "alias/${bucket_prefix}-key"
-              - Sid: KMSSemperCloudWachtLogs2
-                Effect: Allow
-                Action:
-                  - kms:*
-                Resource: 
-                  - !Sub "arn:aws:kms:$$$${AWS::Region}:$$$${AWS::AccountId}:alias/${bucket_prefix}-key"
               - Sid: ManageS3Buckets
                 Effect: Allow
                 Action:
@@ -59,6 +34,27 @@ $${resource_tags_block}
                   - s3:ListBucket
                 Resource: 
                   - arn:aws:s3:::${bucket_prefix}*
+              - Sid: KMSStar
+                Effect: Allow
+                Action:
+                  - kms:Create*
+                  - kms:Describe*
+                  - kms:List*
+                  - kms:Get*
+                Resource: "*"
+%{ if kms_key_arn != "" }
+              - Sid: KMSCloudTrail
+                Effect: Allow
+                Action:
+                  - kms:*
+                Resource: ${kms_key_arn}
+%{ else }
+              - Sid: KMSCloudTrail
+                Effect: Allow
+                Action:
+                  - kms:*
+                Resource: "*"
+%{ endif }
 %{ if bucket_notification_to_sns_name != "" }
               - Sid: ManageSNSNotifications
                 Effect: Allow

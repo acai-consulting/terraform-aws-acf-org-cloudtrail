@@ -31,3 +31,17 @@ variable "s3_bucket" {
     error_message = "Both bucket_name and bucket_name_prefix must only contain alphanumeric characters and hyphens, if provided."
   }
 }
+
+variable "core_configuration" {
+  description = "Written Org CloudTrail-Node of the Core Configuration"
+  type = optional(object({
+    cloudtrail_admin = object({
+      cloudwatch_loggroup = object({
+        kms_key_arn = optional(string, null)
+      })
+    })
+    cloudtrail_bucket = object({
+      kms_key_arn = string
+    })
+  }), null)
+}

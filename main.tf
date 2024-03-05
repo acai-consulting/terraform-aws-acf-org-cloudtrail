@@ -31,8 +31,8 @@ locals {
   core_configuration_to_write = {
     "org_cloudtrail" = {
       cloudtrail_admin = {
-        org_cloudtrail_name      = var.org_cloudtrail_name
-        cloudwatch_loggroup_name = var.org_cloudtrail_name
+        org_cloudtrail_name = var.org_cloudtrail_name
+        cloudwatch_loggroup = var.cloudwatch_loggroup == null ? {} : module.cloudwatch_loggroup[0]
       }
       cloudtrail_bucket = module.log_archive_bucket
     }

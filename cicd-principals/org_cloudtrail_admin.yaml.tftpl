@@ -23,38 +23,44 @@ $${resource_tags_block}
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
+              - Sid: OrganizationStar
+                Effect: Allow
+                Action:
+                  - organizations:ListAccounts
+                  - organizations:EnableAWSServiceAccess
+                  - organizations:DisableAWSServiceAccess
+                  - organizations:ListAWSServiceAccessForOrganization
+                  - organizations:DescribeOrganization
+                Resource: "*"
               - Sid: KMSStar
                 Effect: Allow
                 Action:
-                  - kms:*
                   - kms:Create*
                   - kms:Describe*
                   - kms:List*
                   - kms:Get*
-                  - kms:TagResource
-                  - kms:UntagResource
                 Resource: "*"
-              - Sid: KMSSemperCloudWachtLogs1
+%{ if kms_key_arn != "" }
+              - Sid: KMSCloudTrail
+                Effect: Allow
+                Action:
+                  - kms:*
+                Resource: ${kms_key_arn}
+%{ else }
+              - Sid: KMSCloudTrail
                 Effect: Allow
                 Action:
                   - kms:*
                 Resource: "*"
-                Condition:
-                  StringLike:                
-                    kms:RequestAlias: "alias/${cloudwatch_loggroup_name}-key"
-              - Sid: KMSSemperCloudWachtLogs2
-                Effect: Allow
-                Action:
-                  - kms:*
-                Resource: 
-                  - !Sub "arn:aws:kms:$$$${AWS::Region}:$$$${AWS::AccountId}:alias/${cloudwatch_loggroup_name}-key"
-              - Sid: AllowIAM
+%{ endif }
+              - Sid: AllowIAMStar
                 Effect: Allow
                 Action:
                   - iam:Get*
                   - iam:List*
+                  - iam:CreateServiceLinkedRole
                 Resource: "*"
-              - Sid: AllowIAMStar
+              - Sid: AllowIAMCloudTrail
                 Effect: Allow
                 Action:
                   - iam:*
@@ -63,35 +69,17 @@ $${resource_tags_block}
               - Sid: AllowCloudTrail
                 Effect: Allow
                 Action:
-                  - cloudtrail:UpdateTrail
-                  - cloudtrail:CreateTrail
-                  - cloudtrail:DescribeTrails
-                  - cloudtrail:GetTrail
-                  - cloudtrail:GetTrailStatus
-                  - cloudtrail:GetEventSelectors
-                  - cloudtrail:AddTags
-                  - cloudtrail:ListTags
-                  - cloudtrail:RemoveTags
+                  - cloudtrail:*
                 Resource: "*"
-              - Sid: AllowCloudTrailLogs
-                Effect: Allow
-                Action:
-                  - logs:Create*
-                  - logs:AssociateKmsKey
-                  - logs:DisassociateKmsKey
-                  - logs:Describe*
-                  - logs:List*
-                  - logs:ListTagsLogGroup
-                  - logs:Get*
-                  - logs:Delete*
-                  - logs:PutRetentionPolicy
-                  - logs:TagLogGroup
-                  - logs:UntagLogGroup
-                Resource:
-                  - !Sub "arn:aws:logs:$$$${AWS::Region}:$$$${AWS::AccountId}:log-group:${cloudwatch_loggroup_name}"
-                  - !Sub "arn:aws:logs:$$$${AWS::Region}:$$$${AWS::AccountId}:log-group:${cloudwatch_loggroup_name}:*"
               - Sid: AllowLogsStar
                 Effect: Allow
                 Action:
                   - logs:DescribeLogGroups
-                Resource: "*"
+                Resource: "*"              
+              - Sid: AllowLogsCloudTrail
+                Effect: Allow
+                Action:
+                  - logs:*
+                Resource:
+                  - !Sub "arn:aws:logs:$$$${AWS::Region}:$$$${AWS::AccountId}:log-group:${cloudwatch_loggroup_name}"
+                  - !Sub "arn:aws:logs:$$$${AWS::Region}:$$$${AWS::AccountId}:log-group:${cloudwatch_loggroup_name}:*"

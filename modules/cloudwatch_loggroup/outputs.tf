@@ -5,3 +5,7 @@ output "iam_role_arn" {
 output "loggroup_arn" {
   value = aws_cloudwatch_log_group.org_cloudtrail_cloudwatch_loggroup.arn
 }
+
+output "kms_key_arn" {
+  value = aws_kms_key.org_cloudtrail_kms.arn
+}
