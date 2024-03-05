@@ -3,7 +3,7 @@ data "template_file" "org_cloudtrail_admin" {
   vars = {
     cloudwatch_loggroup_name       = var.cloudwatch_loggroup.loggroup_name
     cloudwatch_role_name_with_path = replace("/${var.cloudwatch_loggroup.iam_role_path}/${var.cloudwatch_loggroup.iam_role_name}", "////", "/")
-    kms_cmk_arn                    = var.core_configuration == null ? "" : var.core_configuration.cloudtrail_admin.cloudwatch_loggroup.kms_cmk_arn == null ? "" : var.core_configuration.cloudtrail_admin.cloudwatch_loggroup.kms_key_arn
+    kms_cmk_arn                    = var.core_configuration == null ? "" : var.core_configuration.cloudtrail_admin.cloudwatch_loggroup.kms_cmk_arn == null ? "" : var.core_configuration.cloudtrail_admin.cloudwatch_loggroup.kms_cmk_arn
   }
 }
 
