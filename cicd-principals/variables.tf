@@ -19,15 +19,17 @@ variable "s3_bucket" {
   })
 
   validation {
-    condition     = ((var.s3_bucket.bucket_name != null && length(regexall("^[a-zA-Z0-9-]+$", coalesce(var.s3_bucket.bucket_name, ""))) > 0) || 
-                      (var.s3_bucket.bucket_name_prefix != null && length(regexall("^[a-zA-Z0-9-]+$", coalesce(var.s3_bucket.bucket_name_prefix, ""))) > 0))
-    error_message = "Both bucket_name and bucket_name_prefix must only contain alphanumeric characters and hyphens, if provided."
+    condition     = (var.s3_bucket.bucket_name == null ? var.s3_bucket.bucket_name_prefix != null : var.s3_bucket.bucket_name_prefix == null)
+    error_message = "Either bucket_name or bucket_name_prefix must be provided, but not both."
   }
 
   validation {
-    condition     = ((length(coalesce(var.s3_bucket.bucket_name, "")) > 0 && var.s3_bucket.bucket_name_prefix == null) || 
-                      (var.s3_bucket.bucket_name == null && length(coalesce(var.s3_bucket.bucket_name_prefix, "")) > 0))
-    error_message = "Either bucket_name or bucket_name_prefix must be provided, but not both."
+    condition     = alltrue(
+                      var.s3_bucket.bucket_name == null ? true : length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name)) > 0,
+                      var.s3_bucket.bucket_name_prefix == null ? true : length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name_prefix)) > 0
+                    )
+    error_message = "Both bucket_name and bucket_name_prefix must only contain alphanumeric characters and hyphens, if provided."
   }
+
 }
 
