@@ -40,12 +40,12 @@ $${resource_tags_block}
                   - kms:List*
                   - kms:Get*
                 Resource: "*"
-%{ if kms_key_arn != "" }
+%{ if kms_cmk_arn != "" }
               - Sid: KMSCloudTrail
                 Effect: Allow
                 Action:
                   - kms:*
-                Resource: ${kms_key_arn}
+                Resource: ${kms_cmk_arn}
 %{ else }
               - Sid: KMSCloudTrail
                 Effect: Allow

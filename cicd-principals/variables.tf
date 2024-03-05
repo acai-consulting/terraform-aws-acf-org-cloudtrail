@@ -37,11 +37,11 @@ variable "core_configuration" {
   type = object({
     cloudtrail_admin = object({
       cloudwatch_loggroup = object({
-        kms_key_arn = optional(string, null)
+        kms_cmk_arn = optional(string, null)
       })
     })
     cloudtrail_bucket = object({
-      kms_key_arn = string
+      kms_cmk_arn = string
     })
   })
   default = null
