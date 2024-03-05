@@ -82,7 +82,7 @@ module "example_complete" {
     force_destroy      = true
   }
   providers = {
-    aws.org_cloudtrail_admin = aws.org_mgmt
-    aws.core_logging         = aws.core_logging
+    aws.org_cloudtrail_admin  = aws.org_mgmt
+    aws.org_cloudtrail_bucket = aws.core_logging
   }
 }
