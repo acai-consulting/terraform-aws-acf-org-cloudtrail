@@ -34,18 +34,28 @@ $${resource_tags_block}
                   - kms:TagResource
                   - kms:UntagResource
                 Resource: "*"
-              - Sid: KMSSemper
+              - Sid: KMSSemperCloudWachtLogs1
                 Effect: Allow
                 Action:
                   - kms:*
                 Resource: "*"
                 Condition:
                   StringLike:                
-                    kms:RequestAlias: "alias/${bucket_prefix}*"
+                    kms:RequestAlias: "alias/${bucket_prefix}-key"
+              - Sid: KMSSemperCloudWachtLogs2
+                Effect: Allow
+                Action:
+                  - kms:*
+                Resource: 
+                  - !Sub "arn:aws:kms:$$$${AWS::Region}:$$$${AWS::AccountId}:alias/${bucket_prefix}-key"
               - Sid: ManageS3Buckets
                 Effect: Allow
                 Action:
-                  - s3:*
+                  - s3:CreateBucket
+                  - s3:DeleteBucket
+                  - s3:Get*
+                  - s3:Put*
+                  - s3:ListBucket
                 Resource: 
                   - arn:aws:s3:::${bucket_prefix}*
 %{ if bucket_notification_to_sns_name != "" }

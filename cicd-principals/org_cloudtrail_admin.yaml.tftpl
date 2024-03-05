@@ -33,54 +33,30 @@ $${resource_tags_block}
                   - kms:TagResource
                   - kms:UntagResource
                 Resource: "*"
-              - Sid: KMSSemper
+              - Sid: KMSSemperCloudWachtLogs1
                 Effect: Allow
                 Action:
-                  - kms:CancelKeyDeletion
-                  - kms:ConnectCustomKeyStore
-                  - kms:Decrypt
-                  - kms:Delete*
-                  - kms:Disable*
-                  - kms:DisconnectCustomKeyStore
-                  - kms:Enable*
-                  - kms:Encrypt
-                  - kms:Generate*
-                  - kms:ImportKeyMaterial
-                  - kms:PutKeyPolicy
-                  - kms:ReEncrypt*
-                  - kms:ReplicateKey
-                  - kms:RetireGrant
-                  - kms:RevokeGrant
-                  - kms:ScheduleKeyDeletion
-                  - kms:Sign
-                  - kms:SynchronizeMultiRegionKey
-                  - kms:Update*
-                  - kms:Verify
+                  - kms:*
                 Resource: "*"
                 Condition:
                   StringLike:                
                     kms:RequestAlias: "alias/${cloudwatch_loggroup_name}-key"
+              - Sid: KMSSemperCloudWachtLogs2
+                Effect: Allow
+                Action:
+                  - kms:*
+                Resource: 
+                  - !Sub "arn:aws:kms:$$$${AWS::Region}:$$$${AWS::AccountId}:alias/${cloudwatch_loggroup_name}-key"
               - Sid: AllowIAM
                 Effect: Allow
                 Action:
                   - iam:Get*
                   - iam:List*
-                  - iam:Describe*
-                  - iam:CreateServiceLinkedRole
                 Resource: "*"
               - Sid: AllowIAMStar
                 Effect: Allow
                 Action:
-                  - iam:DetachRolePolicy
-                  - iam:AttachRolePolicy
-                  - iam:DeleteRolePolicy
-                  - iam:Delete*
-                  - iam:PassRole
-                  - iam:CreateRole
-                  - iam:PutRolePolicy
-                  - iam:PutRolePolicy
-                  - iam:TagRole
-                  - iam:Update*
+                  - iam:*
                 Resource:
                   - !Sub "arn:aws:iam::$$$${AWS::AccountId}:role${cloudwatch_role_name_with_path}"
               - Sid: AllowCloudTrail
