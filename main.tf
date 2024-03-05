@@ -29,7 +29,7 @@ data "aws_caller_identity" "org_cloudtrail" {
 # ---------------------------------------------------------------------------------------------------------------------
 locals {
   core_configuration_to_write = {
-    var.core_configuration_cluster_name = {
+    "security" = {
       "org_cloudtrail" = {
         cloudtrail_admin = {
           org_cloudtrail_name = var.org_cloudtrail_name
