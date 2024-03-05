@@ -14,7 +14,7 @@ variable "s3_bucket" {
     bucket_name        = optional(string, null)
     bucket_name_prefix = optional(string, null)
     notification_to_sns = optional(object({
-      sns_name = string
+      sns_name =  optional(string, "org-cloudtrail-bucket-notification")
     }), null)
   })
 
