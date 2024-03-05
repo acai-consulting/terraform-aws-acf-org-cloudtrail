@@ -24,12 +24,10 @@ variable "s3_bucket" {
   }
 
   validation {
-    condition     = alltrue(
-                      var.s3_bucket.bucket_name == null ? true : length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name)) > 0,
-                      var.s3_bucket.bucket_name_prefix == null ? true : length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name_prefix)) > 0
-                    )
+    condition = alltrue(
+      var.s3_bucket.bucket_name == null ? true : length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name)) > 0,
+      var.s3_bucket.bucket_name_prefix == null ? true : length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name_prefix)) > 0
+    )
     error_message = "Both bucket_name and bucket_name_prefix must only contain alphanumeric characters and hyphens, if provided."
   }
-
 }
-
