@@ -79,6 +79,7 @@ $${resource_tags_block}
                 Resource: 
                   - !Sub "arn:aws:s3:::${bucket_prefix}*"
                 ${bucket_prefix}*
+%{ if bucket_notification_to_sns_name != "" }
               - Sid: ManageSNSNotifications
                 Effect: Allow
                 Action:
@@ -90,3 +91,4 @@ $${resource_tags_block}
                   - sns:Publish
                 Resource: 
                   - !Sub "arn:aws:sns:*:*:${bucket_notification_to_sns_name}
+%{ endif }
