@@ -45,7 +45,7 @@ terraform {
 # ¦ VERSIONS
 # ---------------------------------------------------------------------------------------------------------------------
 terraform {
-  required_version = ">= 1.3.0"
+  required_version = ">= 1.3.9"
 
   required_providers {
     aws = {
@@ -81,9 +81,8 @@ module "example_complete" {
     days_to_expiration = 180
     force_destroy      = true
   }
-  resource_name_prefix = "test-"
   providers = {
-    aws.org_cloudtrail_admin = aws.org_mgmt
-    aws.core_logging         = aws.core_logging
+    aws.org_cloudtrail_admin  = aws.org_mgmt
+    aws.org_cloudtrail_bucket = aws.core_logging
   }
 }

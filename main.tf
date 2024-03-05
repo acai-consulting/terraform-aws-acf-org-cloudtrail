@@ -2,8 +2,8 @@
 # ¦ REQUIREMENTS
 # ---------------------------------------------------------------------------------------------------------------------
 terraform {
-  # This module is only being tested with Terraform 0.15.x and newer.
-  required_version = ">= 1.3.0"
+  # This module is only being tested with Terraform 1.3.9 and newer.
+  required_version = ">= 1.3.9"
 
   required_providers {
     aws = {
@@ -11,12 +11,11 @@ terraform {
       version = ">= 5.0"
       configuration_aliases = [
         aws.org_cloudtrail_admin,
-        aws.core_logging
+        aws.org_cloudtrail_bucket
       ]
     }
   }
 }
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ DATA
@@ -30,12 +29,14 @@ data "aws_caller_identity" "org_cloudtrail" {
 # ---------------------------------------------------------------------------------------------------------------------
 locals {
   core_configuration_to_write = {
-    "org_cloudtrail" = {
-      cloudtrail_admin = {
-        org_cloudtrail_name      = var.org_cloudtrail_name
-        cloudwatch_loggroup_name = var.org_cloudtrail_name
+    "security" = {
+      "org_cloudtrail" = {
+        cloudtrail_admin = {
+          org_cloudtrail_name = var.org_cloudtrail_name
+          cloudwatch_loggroup = var.cloudwatch_loggroup == null ? {} : module.cloudwatch_loggroup[0]
+        }
+        cloudtrail_bucket = module.log_archive_bucket
       }
-      cloudtrail_bucket = module.log_archive_bucket
     }
   }
 }
@@ -46,12 +47,11 @@ locals {
 module "log_archive_bucket" {
   source = "./modules/log_archive"
 
-  s3_bucket            = var.s3_bucket
-  org_mgmt_account_id  = data.aws_caller_identity.org_cloudtrail.account_id
-  resource_tags        = var.resource_tags
-  resource_name_prefix = var.resource_name_prefix
+  s3_bucket           = var.s3_bucket
+  org_mgmt_account_id = data.aws_caller_identity.org_cloudtrail.account_id
+  resource_tags       = var.resource_tags
   providers = {
-    aws = aws.core_logging
+    aws = aws.org_cloudtrail_bucket
   }
 }
 
@@ -59,10 +59,8 @@ module "cloudwatch_loggroup" {
   source = "./modules/cloudwatch_loggroup"
   count  = var.cloudwatch_loggroup != null ? 1 : 0
 
-  org_cloudtrail_name  = var.org_cloudtrail_name
-  cloudwatch_loggroup  = var.cloudwatch_loggroup
-  resource_tags        = var.resource_tags
-  resource_name_prefix = var.resource_name_prefix
+  cloudwatch_loggroup = var.cloudwatch_loggroup
+  resource_tags       = var.resource_tags
   providers = {
     aws = aws.org_cloudtrail_admin
   }

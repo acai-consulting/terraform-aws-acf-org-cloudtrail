@@ -2,51 +2,28 @@
 
 <!-- LOGO -->
 <a href="https://acai.gmbh">    
-  <img src="https://github.com/acai-consulting/acai.public/raw/main/logo/logo.png" alt="acai logo" title="ACAI" align="right" height="100" />
+  <img src="https://github.com/acai-consulting/acai.public/raw/main/logo/logo_github_readme.png" alt="acai logo" title="ACAI" align="right" height="75" />
 </a>
 
 <!-- SHIELDS -->
 [![Maintained by acai.gmbh][acai-shield]][acai-url]
 [![Terraform Version][terraform-version-shield]][terraform-version-url]
-[![Latest Release][release-shield]][release-url]
 
 <!-- DESCRIPTION -->
 Deploy the AWS Organization CloudTrail
 
-[Terraform][terraform-url] module to deploy REPLACE_ME resources on [AWS][aws-url]
 
 <!-- ARCHITECTURE -->
 ## Architecture
 ![architecture][architecture-png]
 
-<!-- FEATURES -->
-## Features
-* Creates a REPLACE_ME
-
-<!-- USAGE -->
-## Usage
-
-### REPLACE_ME
-```hcl
-module "REPLACE_ME" {
-  source  = "acai/REPLACE_ME/aws"
-  version = "~> 1.0"
-
-  input1 = "value1"
-}
-```
-
-<!-- EXAMPLES -->
-## Examples
-
-* [`examples/complete`][example-complete-url]
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.9 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
@@ -74,28 +51,25 @@ module "REPLACE_ME" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_org_cloudtrail_name"></a> [org\_cloudtrail\_name](#input\_org\_cloudtrail\_name) | Name of the Organization CloudTrail. | `string` | n/a | yes |
-| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name_prefix  = string<br>    days_to_glacier     = optional(number, -1)<br>    days_to_expiration  = number<br>    bucket_access_s3_id = optional(string, null)<br>    force_destroy       = optional(bool, false) # true - for testing only<br>  })</pre> | n/a | yes |
-| <a name="input_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#input\_cloudwatch\_loggroup) | Configuration settings for CloudWatch LogGroup. | <pre>object({<br>    iam_role_name     = optional(string, "cloudtrail-role") # without prefix<br>    iam_role_path     = optional(string, "/")               # without prefix<br>    iam_role_pb       = optional(string, null)<br>    retention_in_days = optional(number, 3)<br>    monitoring = optional(object({<br>      inbound_iam_role_name = optional(string, null)<br>      destination_arn       = optional(string, null)<br>    }), null)<br>  })</pre> | `null` | no |
-| <a name="input_resource_name_prefix"></a> [resource\_name\_prefix](#input\_resource\_name\_prefix) | Alphanumeric suffix for all the resource names in this module. | `string` | `""` | no |
+| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | Configuration settings for core logging. | <pre>object({<br>    bucket_name           = optional(string, null)<br>    bucket_name_prefix    = optional(string, null)<br>    days_to_glacier       = optional(number, -1)<br>    days_to_expiration    = number<br>    bucket_access_s3_id   = optional(string, null)<br>    force_destroy         = optional(bool, false) # true - for testing only<br>    reader_principal_arns = optional(list(string), [])<br>    notification_to_sns = optional(object({<br>      sns_name            = optional(string, "org-cloudtrail-bucket-notification")<br>      allowed_subscribers = list(string)<br>    }), null)<br>  })</pre> | n/a | yes |
+| <a name="input_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#input\_cloudwatch\_loggroup) | Configuration settings for CloudWatch LogGroup. | <pre>object({<br>    loggroup_name     = optional(string, "org-cloudtrail-logs")<br>    iam_role_name     = optional(string, "cloudtrail-role")<br>    iam_role_path     = optional(string, "/")<br>    iam_role_pb       = optional(string, null)<br>    retention_in_days = optional(number, 3)<br>    monitoring = optional(object({<br>      inbound_iam_role_name = optional(string, null)<br>      destination_arn       = optional(string, null)<br>    }), null)<br>  })</pre> | `null` | no |
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | A map of tags to assign to the resources in this module. | `map(string)` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_core_parameter_to_write"></a> [core\_parameter\_to\_write](#output\_core\_parameter\_to\_write) | This must be in sync with the Account Baselining |
+| <a name="output_core_configuration_to_write"></a> [core\_configuration\_to\_write](#output\_core\_configuration\_to\_write) | This must be in sync with the Account Baselining |
 <!-- END_TF_DOCS -->
 
 <!-- AUTHORS -->
 ## Authors
 
-This module is maintained by [ACAI GmbH][acai-url] with help from [these amazing contributors][contributors-url]
+This module is maintained by [ACAI GmbH][acai-url]
 
 <!-- LICENSE -->
 ## License
 
-This module is licensed under Apache 2.0
-<br />
 See [LICENSE][license-url] for full details
 
 <!-- COPYRIGHT -->
@@ -106,12 +80,10 @@ See [LICENSE][license-url] for full details
 <!-- MARKDOWN LINKS & IMAGES -->
 [acai-shield]: https://img.shields.io/badge/maintained_by-acai.gmbh-CB224B?style=flat
 [acai-url]: https://acai.gmbh
-[terraform-version-shield]: https://img.shields.io/badge/tf-%3E%3D1.3.0-blue.svg?style=flat&color=blueviolet
-[terraform-version-url]: https://www.terraform.io/upgrade-guides/0-15.html
+[terraform-version-shield]: https://img.shields.io/badge/tf-%3E%3D1.3.9-blue.svg?style=flat&color=blueviolet
+[terraform-version-url]: https://www.terraform.io/upgrade-guides/1-3-9.html
 [release-shield]: https://img.shields.io/github/v/release/acai-consulting/terraform-aws-acf-ou-mgmt?style=flat&color=success
-[architecture-png]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/blob/main/docs/architecture.png?raw=true
+[architecture-png]: ./docs/acf_org_cloudtrail.png
 [release-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/releases
-[contributors-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/graphs/contributors
 [license-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/tree/main/LICENSE
 [terraform-url]: https://www.terraform.io
-[aws-url]: https://aws.amazon.comterraform-aws-acf-ou-mgmt/tree/main/examples/complete
