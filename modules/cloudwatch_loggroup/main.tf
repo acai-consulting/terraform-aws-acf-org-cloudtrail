@@ -86,7 +86,7 @@ data "aws_iam_policy_document" "org_cloudtrail_kms" {
           "arn:aws:logs:%s:%s:log-group:%s",
           data.aws_region.org_cloudtrail.name,
           data.aws_caller_identity.org_cloudtrail.account_id,
-          aws_cloudwatch_log_group.org_cloudtrail_cloudwatch_loggroup.name
+          var.cloudwatch_loggroup.loggroup_name
         )
       ]
     }
