@@ -57,7 +57,6 @@ module "cloudwatch_loggroup" {
   source = "./modules/cloudwatch_loggroup"
   count  = var.cloudwatch_loggroup != null ? 1 : 0
 
-  org_cloudtrail_name = var.org_cloudtrail_name
   cloudwatch_loggroup = var.cloudwatch_loggroup
   resource_tags       = var.resource_tags
   providers = {
