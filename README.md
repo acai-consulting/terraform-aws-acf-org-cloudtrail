@@ -8,38 +8,15 @@
 <!-- SHIELDS -->
 [![Maintained by acai.gmbh][acai-shield]][acai-url]
 [![Terraform Version][terraform-version-shield]][terraform-version-url]
-[![Latest Release][release-shield]][release-url]
 
 <!-- DESCRIPTION -->
 Deploy the AWS Organization CloudTrail
 
-[Terraform][terraform-url] module to deploy REPLACE_ME resources on [AWS][aws-url]
 
 <!-- ARCHITECTURE -->
 ## Architecture
 ![architecture][architecture-png]
 
-<!-- FEATURES -->
-## Features
-* Creates a REPLACE_ME
-
-<!-- USAGE -->
-## Usage
-
-### REPLACE_ME
-```hcl
-module "REPLACE_ME" {
-  source  = "acai/REPLACE_ME/aws"
-  version = "~> 1.0"
-
-  input1 = "value1"
-}
-```
-
-<!-- EXAMPLES -->
-## Examples
-
-* [`examples/complete`][example-complete-url]
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -104,11 +81,10 @@ See [LICENSE][license-url] for full details
 <!-- MARKDOWN LINKS & IMAGES -->
 [acai-shield]: https://img.shields.io/badge/maintained_by-acai.gmbh-CB224B?style=flat
 [acai-url]: https://acai.gmbh
-[terraform-version-shield]: https://img.shields.io/badge/tf-%3E%3D1.3.0-blue.svg?style=flat&color=blueviolet
-[terraform-version-url]: https://www.terraform.io/upgrade-guides/0-15.html
+[terraform-version-shield]: https://img.shields.io/badge/tf-%3E%3D1.3.9-blue.svg?style=flat&color=blueviolet
+[terraform-version-url]: https://www.terraform.io/upgrade-guides/1-3-9.html
 [release-shield]: https://img.shields.io/github/v/release/acai-consulting/terraform-aws-acf-ou-mgmt?style=flat&color=success
-[architecture-png]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/blob/main/docs/architecture.png?raw=true
+[architecture-png]: ./docs/acf_org_cloudtrail.png
 [release-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/releases
-[contributors-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/graphs/contributors
 [license-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/tree/main/LICENSE
 [terraform-url]: https://www.terraform.io
