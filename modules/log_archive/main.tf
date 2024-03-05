@@ -307,14 +307,14 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
 # ¦ S3 BUCKET NOTIFICATION
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_sns_topic" "s3_notification_sns" {
-  count = var.bucket_notification_to_sns != null ? 1 : 0
+  count = var.s3_bucket.notification_to_sns != null ? 1 : 0
 
-  name = var.bucket_notification_to_sns.sns_name
+  name = var.s3_bucket.notification_to_sns.sns_name
   tags = var.resource_tags
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
-  count = var.bucket_notification_to_sns != null ? 1 : 0
+  count = var.s3_bucket.notification_to_sns != null ? 1 : 0
 
   bucket = aws_s3_bucket.cloudtrail_logs.id
 
@@ -326,14 +326,14 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 }
 
 resource "aws_sns_topic_policy" "s3_notification_sns" {
-  count = var.bucket_notification_to_sns != null ? 1 : 0
+  count = var.s3_bucket.notification_to_sns != null ? 1 : 0
 
   arn    = aws_sns_topic.s3_notification_sns[0].arn
   policy = data.aws_iam_policy_document.s3_notification_sns[0].json
 }
 
 data "aws_iam_policy_document" "s3_notification_sns" {
-  count = var.bucket_notification_to_sns != null ? 1 : 0
+  count = var.s3_bucket.notification_to_sns != null ? 1 : 0
 
   statement {
     sid     = "AllowedPublishers"
@@ -366,7 +366,7 @@ data "aws_iam_policy_document" "s3_notification_sns" {
     effect  = "Allow"
     principals {
       type        = "AWS"
-      identifiers = var.bucket_notification_to_sns.allowed_subscribers
+      identifiers = var.s3_bucket.notification_to_sns.allowed_subscribers
     }
     resources = [aws_sns_topic.s3_notification_sns[0].arn]
   }

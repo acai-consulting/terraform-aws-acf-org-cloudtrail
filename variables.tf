@@ -52,10 +52,11 @@ variable "s3_bucket" {
     force_destroy         = optional(bool, false) # true - for testing only
     reader_principal_arns = optional(list(string), [])
     notification_to_sns = optional(object({
-      sns_name = string
+      sns_name            = optional(string, "org-cloudtrail-bucket-notification")
+      allowed_subscribers = list(string)
     }), null)
   })
-
+  /*
   validation {
     condition     = (var.s3_bucket.bucket_name != null && length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name)) > 0) || (var.s3_bucket.bucket_name_prefix != null && length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name_prefix)) > 0)
     error_message = "Both bucket_name and bucket_name_prefix must only contain alphanumeric characters and hyphens, if provided."
@@ -65,7 +66,7 @@ variable "s3_bucket" {
     condition     = (length(var.s3_bucket.bucket_name) > 0 && var.s3_bucket.bucket_name_prefix == null) || (var.s3_bucket.bucket_name == null && length(var.s3_bucket.bucket_name_prefix) > 0)
     error_message = "Either bucket_name or bucket_name_prefix must be provided, but not both."
   }
-
+*/
   validation {
     condition     = var.s3_bucket.days_to_glacier >= -1
     error_message = "The s3_days_to_glacier must be -1 or a positive integer."

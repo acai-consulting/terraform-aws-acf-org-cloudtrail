@@ -8,19 +8,15 @@ variable "s3_bucket" {
     bucket_access_s3_id   = string
     force_destroy         = bool
     reader_principal_arns = list(string)
+    notification_to_sns = optional(object({
+      sns_name            = optional(string, "org-cloudtrail-bucket-notification")
+      allowed_subscribers = list(string)
+    }), null)
   })
 }
 
 variable "org_mgmt_account_id" {
   type = string
-}
-
-variable "bucket_notification_to_sns" {
-  type = object({
-    sns_name            = optional(string, "org-cloudtrail-bucket-notification")
-    allowed_subscribers = list(string)
-  })
-  default = null
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
