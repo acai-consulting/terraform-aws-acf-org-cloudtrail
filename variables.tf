@@ -50,7 +50,7 @@ variable "s3_bucket" {
     days_to_expiration    = number
     bucket_access_s3_id   = optional(string, null)
     force_destroy         = optional(bool, false) # true - for testing only
-    reader_principal_arns = optional(list(sting), [])
+    reader_principal_arns = optional(list(string), [])
     notification_to_sns = optional(object({
       sns_name = string
     }), null)
