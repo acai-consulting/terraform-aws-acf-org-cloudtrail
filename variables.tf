@@ -51,6 +51,9 @@ variable "s3_bucket" {
     bucket_access_s3_id   = optional(string, null)
     force_destroy         = optional(bool, false) # true - for testing only
     reader_principal_arns = optional(list(sting), [])
+    notification_to_sns = optional(object({
+      sns_name = string
+    }), null)
   })
 
   validation {
