@@ -2,7 +2,6 @@ variable "s3_bucket" {
   description = "Configuration settings for core logging."
   type = object({
     bucket_name         = string
-    bucket_name_prefix  = string
     days_to_glacier     = number
     days_to_expiration  = number
     bucket_access_s3_id = string

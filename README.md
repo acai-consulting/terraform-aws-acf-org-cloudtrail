@@ -10,7 +10,8 @@
 [![Terraform Version][terraform-version-shield]][terraform-version-url]
 
 <!-- DESCRIPTION -->
-Deploy the AWS Organization CloudTrail
+This module will deploy the AWS Organization CloudTrail and the S3 bucket to store the logs encrypted with a KMS CMK.
+Optionally the CloudTrail Logs can be stored in a CloudWatch LogGroup in the CloudTrail Admin Account.
 
 
 <!-- ARCHITECTURE -->
@@ -65,12 +66,13 @@ Deploy the AWS Organization CloudTrail
 <!-- AUTHORS -->
 ## Authors
 
-This module is maintained by [ACAI GmbH][acai-url]
+This module is maintained by [ACAI GmbH][acai-url].
 
+<!-- LICENSE -->
 <!-- LICENSE -->
 ## License
 
-See [LICENSE][license-url] for full details
+See [LICENSE][license-url] for full details.
 
 <!-- COPYRIGHT -->
 <br />

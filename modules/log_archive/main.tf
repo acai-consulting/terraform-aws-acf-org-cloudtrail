@@ -136,7 +136,6 @@ resource "aws_kms_alias" "core_logging_cloudtrail_mgmt_kms" {
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket" "cloudtrail_logs" {
   bucket        = var.s3_bucket.bucket_name
-  bucket_prefix = var.s3_bucket.bucket_name_prefix
   force_destroy = var.s3_bucket.force_destroy
   tags          = var.resource_tags
 }
