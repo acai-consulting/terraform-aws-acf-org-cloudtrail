@@ -20,7 +20,7 @@ variable "cloudwatch_loggroup" {
     }), null)
   })
   default = null
-  
+
   validation {
     condition = var.cloudwatch_loggroup == null ? true : (
       contains(
@@ -33,7 +33,7 @@ variable "cloudwatch_loggroup" {
     condition = var.cloudwatch_loggroup == null ? true : (
       var.cloudwatch_loggroup.monitoring == null ? true : (
         (var.cloudwatch_loggroup.monitoring.destination_arn == null ? true :
-          can(regex("^arn:aws:logs:", var.cloudwatch_loggroup.monitoring.destination_arn)))))
+    can(regex("^arn:aws:logs:", var.cloudwatch_loggroup.monitoring.destination_arn)))))
     error_message = "If monitoring is specified, destination_arn must contain ARN, starting with 'arn:aws:logs:'."
   }
 }
@@ -51,22 +51,22 @@ variable "s3_bucket" {
     force_destroy       = optional(bool, false) # true - for testing only
     policy = optional(object({
       reader_principal_arns = optional(list(string), [])
-      access_to_org      = optional(bool, false)
+      access_to_org         = optional(bool, false)
       }), {
       reader_principal_arns = []
-      access_to_org      = false
+      access_to_org         = false
     })
     notification_to_sns = optional(object({
       sns_name            = optional(string, "org-cloudtrail-bucket-notification")
       allowed_subscribers = list(string)
     }), null)
   })
-  
+
   validation {
-    condition     = length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name)) > 0 
+    condition     = length(regexall("^[a-zA-Z0-9-]+$", var.s3_bucket.bucket_name)) > 0
     error_message = "Both bucket_name and bucket_name_prefix must only contain alphanumeric characters and hyphens, if provided."
   }
-  
+
   validation {
     condition     = var.s3_bucket.days_to_glacier >= -1
     error_message = "The s3_days_to_glacier must be -1 or a positive integer."

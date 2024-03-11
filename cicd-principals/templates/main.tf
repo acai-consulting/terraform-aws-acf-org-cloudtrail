@@ -17,7 +17,7 @@ locals {
         )
       )
     )
-  )  
+  )
 }
 
 data "template_file" "org_cloudtrail_admin" {
