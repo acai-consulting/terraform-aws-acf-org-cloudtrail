@@ -1,8 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "IAM Role used to provision SEMPER Logging bucket"
+Description: "IAM Role used to provision Org CloudTrail Resources"
 
 Resources:
-  # ¦ SemperProvisioningRole
   OrgCloudTrailBucketProvisioningRole:
     Type: AWS::IAM::Role
     Properties:
@@ -24,6 +23,11 @@ $${resource_tags_block}
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
+              - Sid: OrganizationStar
+                Effect: Allow
+                Action:
+                  - organizations:DescribeOrganization
+                Resource: "*"            
               - Sid: ManageS3Buckets
                 Effect: Allow
                 Action:

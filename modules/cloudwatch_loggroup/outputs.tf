@@ -9,6 +9,6 @@ output "loggroup_arn" {
 }
 
 output "kms_cmk_arn" {
-  description = "ARN of the KMS CMK used to encrypt the CloudWathc Logs"
+  description = "ARN of the KMS CMK used to encrypt the CloudWatch Logs"
   value       = aws_kms_key.org_cloudtrail_kms.arn
 }

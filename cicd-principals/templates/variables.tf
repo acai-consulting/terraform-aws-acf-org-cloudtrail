@@ -35,14 +35,18 @@ variable "s3_bucket" {
 variable "core_configuration" {
   description = "Written Org CloudTrail-Node of the Core Configuration"
   type = object({
-    cloudtrail_admin = object({
-      cloudwatch_loggroup = object({
-        kms_cmk_arn = optional(string, null)
-      })
-    })
-    cloudtrail_bucket = object({
-      kms_cmk_arn = string
-    })
+    security = optional(object({
+      org_cloudtrail = optional(object({
+        cloudtrail_admin = object({
+          cloudwatch_loggroup = object({
+            kms_cmk_arn = optional(string, null)
+          })
+        })
+        cloudtrail_bucket = object({
+          kms_cmk_arn = string
+        })
+      }), null)
+    }), null)
   })
   default = null
 }

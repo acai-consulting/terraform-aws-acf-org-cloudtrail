@@ -19,14 +19,14 @@ terraform {
 # ¦ DATA
 # ---------------------------------------------------------------------------------------------------------------------
 data "aws_caller_identity" "org_cloudtrail_bucket_target" {}
-
+data "aws_organizations_organization" "org_cloudtrail_bucket_target" {}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ KMS KEY
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_kms_key" "core_logging_cloudtrail_mgmt_kms" {
   description             = "encryption key for object uploads to ${aws_s3_bucket.cloudtrail_logs.id}"
-  deletion_window_in_days = 7
+  deletion_window_in_days = 30
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.core_logging_cloudtrail_mgmt_kms.json
   tags = merge(
@@ -85,6 +85,45 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_kms" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
   }
+
+  dynamic "statement" {
+    for_each = length(var.s3_bucket.policy.reader_principal_arns) > 0 ? [1] : []
+    content {
+      sid    = "ReaderPrincipals"
+      effect = "Allow"
+      actions = [
+        "kms:Decrypt"
+      ]
+      principals {
+        type        = "AWS"
+        identifiers = var.s3_bucket.policy.reader_principal_arns
+      }
+      resources = ["*"]
+    }
+  }
+
+  dynamic "statement" {
+    for_each = var.s3_bucket.policy.access_to_org == true ? [1] : []
+    content {
+      sid    = "AwsOrgMemberObjectAccess"
+      effect = "Allow"
+      principals {
+        type        = "AWS"
+        identifiers = ["*"]
+      }
+      actions = [
+        "kms:Decrypt"
+      ]
+      resources = ["*"]
+      condition {
+        test     = "StringEquals"
+        variable = "aws:PrincipalOrgID"
+        values = [
+          data.aws_organizations_organization.org_cloudtrail_bucket_target.id
+        ]
+      }
+    }
+  }
 }
 
 resource "aws_kms_alias" "core_logging_cloudtrail_mgmt_kms" {
@@ -97,7 +136,6 @@ resource "aws_kms_alias" "core_logging_cloudtrail_mgmt_kms" {
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket" "cloudtrail_logs" {
   bucket        = var.s3_bucket.bucket_name
-  bucket_prefix = var.s3_bucket.bucket_name_prefix
   force_destroy = var.s3_bucket.force_destroy
   tags          = var.resource_tags
 }
@@ -138,7 +176,7 @@ resource "aws_s3_bucket_object_lock_configuration" "cloudtrail_logs" {
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs_custom" {
+resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs" {
   bucket = aws_s3_bucket.cloudtrail_logs.id
   rule {
     apply_server_side_encryption_by_default {
@@ -148,7 +186,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs_c
   }
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_lifecycle" {
+resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
   bucket = aws_s3_bucket.cloudtrail_logs.id
 
   rule {
@@ -171,26 +209,28 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_lifecycle" {
 }
 
 
-resource "aws_s3_bucket" "log_bucket" {
+resource "aws_s3_bucket" "log_access_bucket" {
   count         = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
   force_destroy = var.s3_bucket.force_destroy
 
   bucket = "${aws_s3_bucket.cloudtrail_logs.id}-access-logs"
 }
 
-resource "aws_s3_bucket_public_access_block" "log_bucket" {
+resource "aws_s3_bucket_public_access_block" "log_access_bucket" {
   count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
 
-  bucket                  = aws_s3_bucket.log_bucket[0].id
+  bucket                  = aws_s3_bucket.log_access_bucket[0].id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_logging" "cloudtrail_logs" {
+resource "aws_s3_bucket_logging" "cloudtrail_logs_access" {
+  count = var.s3_bucket.bucket_access_s3_id != "" ? 1 : 0
+
   bucket        = aws_s3_bucket.cloudtrail_logs.id
-  target_bucket = var.s3_bucket.bucket_access_s3_id == null ? aws_s3_bucket.log_bucket[0].id : var.s3_bucket.bucket_access_s3_id
+  target_bucket = var.s3_bucket.bucket_access_s3_id == null ? aws_s3_bucket.log_access_bucket[0].id : var.s3_bucket.bucket_access_s3_id
   target_prefix = "logs/${aws_s3_bucket.cloudtrail_logs.id}/"
 }
 
@@ -201,12 +241,12 @@ resource "aws_s3_bucket_logging" "cloudtrail_logs" {
 ## https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create-s3-bucket-policy-for-cloudtrail.html
 ## https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/
 ## https://aws.amazon.com/premiumsupport/knowledge-center/s3-bucket-store-kms-encrypted-objects/
-resource "aws_s3_bucket_policy" "core_logging_cloudtrail_mgmt_bucket_name" {
+resource "aws_s3_bucket_policy" "cloudtrail_logs" {
   bucket = aws_s3_bucket.cloudtrail_logs.id
-  policy = data.aws_iam_policy_document.core_logging_cloudtrail_mgmt_bucket_name.json
+  policy = data.aws_iam_policy_document.cloudtrail_logs.json
 }
 
-data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
+data "aws_iam_policy_document" "cloudtrail_logs" {
   statement {
     sid    = "Require_KMS_CMK_Encryption"
     effect = "Deny"
@@ -283,7 +323,7 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
   }
 
   dynamic "statement" {
-    for_each = length(var.s3_bucket.reader_principal_arns) > 0 ? [1] : []
+    for_each = length(var.s3_bucket.policy.reader_principal_arns) > 0 ? [1] : []
 
     content {
       sid    = "ReaderPrincipals"
@@ -293,7 +333,7 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
       ]
       principals {
         type        = "AWS"
-        identifiers = var.s3_bucket.reader_principal_arns
+        identifiers = var.s3_bucket.policy.reader_principal_arns
       }
       resources = [
         aws_s3_bucket.cloudtrail_logs.arn,
@@ -301,6 +341,67 @@ data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_bucket_name" {
       ]
     }
   }
+
+  # See: https://aws.amazon.com/de/blogs/mt/restrict-access-by-member-account-to-a-centralized-cloudtrail-logging-bucket/
+  dynamic "statement" {
+    for_each = var.s3_bucket.policy.access_to_org == true ? [1] : []
+    content {
+      sid    = "SpokeAccountAccessBucketLevel"
+      effect = "Allow"
+      principals {
+        type        = "AWS"
+        identifiers = ["*"]
+      }
+      actions = [
+        "s3:ListBucket"
+      ]
+      resources = [
+        aws_s3_bucket.cloudtrail_logs.arn
+      ]
+      condition {
+        test     = "StringEquals"
+        variable = "aws:PrincipalOrgID"
+        values = [
+          data.aws_organizations_organization.org_cloudtrail_bucket_target.id
+        ]
+      }
+      condition {
+        test     = "StringLike"
+        variable = "s3:prefix"
+        values   = ["AWSLogs/${data.aws_organizations_organization.org_cloudtrail_bucket_target.id}/$${aws:PrincipalAccount}/*"]
+      }
+    }
+  }
+
+  dynamic "statement" {
+    for_each = var.s3_bucket.policy.access_to_org == true ? [1] : []
+    content {
+      sid    = "SpokeAccountAccessObjectLevel"
+      effect = "Allow"
+      principals {
+        type        = "AWS"
+        identifiers = ["*"]
+      }
+      actions = [
+        "s3:GetObject"
+      ]
+      resources = [
+        format(
+          "arn:aws:s3:::%s/AWSLogs/%s/$${aws:PrincipalAccount}/*",
+          aws_s3_bucket.cloudtrail_logs.id,
+          data.aws_organizations_organization.org_cloudtrail_bucket_target.id
+        )
+      ]
+      condition {
+        test     = "StringEquals"
+        variable = "aws:PrincipalOrgID"
+        values = [
+          data.aws_organizations_organization.org_cloudtrail_bucket_target.id
+        ]
+      }
+    }
+  }
+
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
