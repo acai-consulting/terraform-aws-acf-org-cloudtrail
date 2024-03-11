@@ -44,13 +44,19 @@ variable "cloudwatch_loggroup" {
 variable "s3_bucket" {
   description = "Configuration settings for core logging."
   type = object({
-    bucket_name           = optional(string, null)
-    bucket_name_prefix    = optional(string, null)
-    days_to_glacier       = optional(number, -1)
-    days_to_expiration    = number
-    bucket_access_s3_id   = optional(string, null)
-    force_destroy         = optional(bool, false) # true - for testing only
-    reader_principal_arns = optional(list(string), [])
+    bucket_name         = optional(string, null)
+    bucket_name_prefix  = optional(string, null)
+    days_to_glacier     = optional(number, -1)
+    days_to_expiration  = number
+    bucket_access_s3_id = optional(string, null)
+    force_destroy       = optional(bool, false) # true - for testing only
+    policy = optional(object({
+      reader_principal_arns = optional(list(string), [])
+      access_to_org      = optional(bool, false)
+      }), {
+      reader_principal_arns = []
+      access_to_org      = false
+    })
     notification_to_sns = optional(object({
       sns_name            = optional(string, "org-cloudtrail-bucket-notification")
       allowed_subscribers = list(string)

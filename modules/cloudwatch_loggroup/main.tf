@@ -37,7 +37,7 @@ resource "aws_cloudwatch_log_group" "org_cloudtrail_cloudwatch_loggroup" {
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_kms_key" "org_cloudtrail_kms" {
   description             = "Encryption key for CloudTrail CloudWatch LogGroup"
-  deletion_window_in_days = 7
+  deletion_window_in_days = 30
   enable_key_rotation     = true
   policy                  = data.aws_iam_policy_document.org_cloudtrail_kms.json
   tags                    = var.resource_tags
