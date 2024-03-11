@@ -3,10 +3,10 @@ name: TERRAFORM MODULE
 on:
   pull_request:
     branches:
-      - Jerry
+      - main
   push:
     branches:
-      - Jerry
+      - main
 
 jobs:
   tfc-module-base-job:
