@@ -236,7 +236,7 @@ resource "aws_s3_bucket_logging" "cloudtrail_logs_access" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "log_access_bucket" {
-  count  = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
+  count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
 
   bucket = aws_s3_bucket.log_access_bucket[0].id
   rule {
