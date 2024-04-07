@@ -53,6 +53,9 @@ terraform {
       version               = ">= 5.0"
       configuration_aliases = []
     }
+    random = {
+      source  = "hashicorp/random"
+    }    
   }
 }
 
@@ -63,9 +66,14 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 # ---------------------------------------------------------------------------------------------------------------------
-# ¦ LOCALS
+# ¦ RANDOM_STRING
 # ---------------------------------------------------------------------------------------------------------------------
-locals {}
+resource "random_string" "suffix" {
+  length  = 8  # Length of the random string, adjust as needed
+  special = false  # Exclude special characters for compatibility
+  upper   = false  # Use lowercase to ensure compatibility with AWS naming conventions
+}
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ MODULE
@@ -77,7 +85,7 @@ module "example_complete" {
 
   cloudwatch_loggroup = {}
   s3_bucket = {
-    bucket_name        = "org-cloudtrail"
+    bucket_name        = "org-cloudtrail-${random_string.suffix.result}"
     days_to_expiration = 180
     force_destroy      = true
   }
