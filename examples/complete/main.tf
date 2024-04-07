@@ -54,8 +54,8 @@ terraform {
       configuration_aliases = []
     }
     random = {
-      source  = "hashicorp/random"
-    }    
+      source = "hashicorp/random"
+    }
   }
 }
 
@@ -69,9 +69,9 @@ data "aws_region" "current" {}
 # ¦ RANDOM_STRING
 # ---------------------------------------------------------------------------------------------------------------------
 resource "random_string" "suffix" {
-  length  = 8  # Length of the random string, adjust as needed
-  special = false  # Exclude special characters for compatibility
-  upper   = false  # Use lowercase to ensure compatibility with AWS naming conventions
+  length  = 8     # Length of the random string, adjust as needed
+  special = false # Exclude special characters for compatibility
+  upper   = false # Use lowercase to ensure compatibility with AWS naming conventions
 }
 
 
