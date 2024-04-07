@@ -141,6 +141,7 @@ resource "aws_iam_role_policy" "org_cloudtrail_cloudwatch_logs" {
 }
 
 ## https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-required-policy-for-cloudwatch-logs.html?icmpid=docs_cloudtrail_console
+#tfsec:ignore:avd-aws-0057
 data "aws_iam_policy_document" "org_cloudtrail_cloudwatch_logs" {
   statement {
     effect = "Allow"
@@ -153,80 +154,3 @@ data "aws_iam_policy_document" "org_cloudtrail_cloudwatch_logs" {
     ]
   }
 }
-
-/*
-# ---------------------------------------------------------------------------------------------------------------------
-# ¦ MONITORING FORWARDING 
-# ¦ *** IAM ROLE
-# ---------------------------------------------------------------------------------------------------------------------
-resource "aws_iam_role" "cw_logs_dest" {
-  count = local.subscribe_to_monitoring == true ? 1 : 0
-
-  name               = var.core_monitoring_inbound_role_name
-  assume_role_policy = data.aws_iam_policy_document.cw_logs_dest_trust[0].json
-  tags               = var.resource_tags
-  provider           = aws.org_cloudtrail_admin
-}
-
-data "aws_iam_policy_document" "cw_logs_dest_trust" {
-  count = local.subscribe_to_monitoring == true ? 1 : 0
-
-  statement {
-    sid    = "TrustPolicy"
-    effect = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = [format("logs.%s.amazonaws.com", data.aws_region.org_cloudtrail.name)]
-    }
-    actions = [
-      "sts:AssumeRole"
-    ]
-  }
-  provider = aws.org_cloudtrail_admin
-}
-
-resource "aws_iam_role_policy" "cw_logs_dest_permissions" {
-  count = local.subscribe_to_monitoring == true ? 1 : 0
-
-  name     = "CwLogsDestAccess"
-  role     = aws_iam_role.cw_logs_dest[0].name
-  policy   = data.aws_iam_policy_document.cw_logs_dest_permissions[0].json
-  provider = aws.org_cloudtrail_admin
-}
-
-data "aws_iam_policy_document" "cw_logs_dest_permissions" {
-  count = local.subscribe_to_monitoring == true ? 1 : 0
-
-  statement {
-    sid    = "LogToCloudWatchLogsDest"
-    effect = "Allow"
-    actions = [
-      "logs:PutLogEvents"
-    ]
-    resources = compact(
-      [
-        format("%s:*", var.core_monitoring_cloudtrail_cw_logs_dest_arn),
-        var.core_monitoring_cloudtrail_cw_logs_dest_arn
-      ]
-    )
-  }
-  provider = aws.org_cloudtrail_admin
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# ¦ *** SUBSCRIPTION FILTER
-resource "aws_cloudwatch_log_subscription_filter" "cloudtrail_to_monitoring_forwarder" {
-  count = local.subscribe_to_monitoring == true ? 1 : 0
-
-  name            = "org-cloudtrail-forwarder"
-  log_group_name  = aws_cloudwatch_log_group.org_cloudtrail_cloudwatch_loggroup[0].name
-  filter_pattern  = ""
-  destination_arn = var.core_monitoring_cloudtrail_cw_logs_dest_arn
-  role_arn        = aws_iam_role.cw_logs_dest[0].arn
-  distribution    = "Random"
-  provider        = aws.org_cloudtrail_admin
-  depends_on = [
-    aws_iam_role.cw_logs_dest[0]
-  ]
-}
-*/
