@@ -19,8 +19,7 @@ Optionally the CloudTrail Logs can be stored in a CloudWatch LogGroup in the Clo
 
 <!-- ARCHITECTURE -->
 ## Architecture
-![architecture][https://raw.githubusercontent.com/acai-consulting/terraform-aws--org-cloudtrail/main/docs/acf_org_cloudtrail.svg]
-
+![architecture][https://raw.githubusercontent.com/acai-consulting/terraform-aws-acf-org-cloudtrail/main/docs/acf_org_cloudtrail.svg]
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
