@@ -208,7 +208,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
   }
 }
 
-
+#tfsec:ignore:avd-aws-0089
+#tfsec:ignore:avd-aws-0090
 resource "aws_s3_bucket" "log_access_bucket" {
   count         = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
   force_destroy = var.s3_bucket.force_destroy
@@ -234,6 +235,17 @@ resource "aws_s3_bucket_logging" "cloudtrail_logs_access" {
   target_prefix = "logs/${aws_s3_bucket.cloudtrail_logs.id}/"
 }
 
+resource "aws_s3_bucket_server_side_encryption_configuration" "log_access_bucket" {
+  count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
+
+  bucket = aws_s3_bucket.log_access_bucket[0].id
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.core_logging_cloudtrail_mgmt_kms.arn
+      sse_algorithm     = "aws:kms"
+    }
+  }
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ S3 BUCKET POLICY
@@ -407,6 +419,7 @@ data "aws_iam_policy_document" "cloudtrail_logs" {
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ S3 BUCKET NOTIFICATION
 # ---------------------------------------------------------------------------------------------------------------------
+#tfsec:ignore:avd-aws-0095  # only meta-data
 resource "aws_sns_topic" "s3_notification_sns" {
   count = var.s3_bucket.notification_to_sns != null ? 1 : 0
 

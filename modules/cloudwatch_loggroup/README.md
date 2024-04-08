@@ -43,6 +43,6 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_iam_role_arn"></a> [iam\_role\_arn](#output\_iam\_role\_arn) | ARN of the IAM Role used to push CLoudTrail Logs to CloudWatch |
-| <a name="output_kms_cmk_arn"></a> [kms\_cmk\_arn](#output\_kms\_cmk\_arn) | ARN of the KMS CMK used to encrypt the CloudWathc Logs |
+| <a name="output_kms_cmk_arn"></a> [kms\_cmk\_arn](#output\_kms\_cmk\_arn) | ARN of the KMS CMK used to encrypt the CloudWatch Logs |
 | <a name="output_loggroup_arn"></a> [loggroup\_arn](#output\_loggroup\_arn) | ARN of the CloudWatch LogGroup |
 <!-- END_TF_DOCS -->
