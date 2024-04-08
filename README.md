@@ -1,13 +1,16 @@
 # terraform-aws-acf-org-cloudtrail
 
-<!-- LOGO -->
-<a href="https://acai.gmbh">    
-  <img src="https://github.com/acai-consulting/acai.public/raw/main/logo/logo_github_readme.png" alt="acai logo" title="ACAI" align="right" height="75" />
-</a>
-
 <!-- SHIELDS -->
-[![Maintained by acai.gmbh][acai-shield]][acai-url]
+[![Maintained by acai.gmbh][acai-shield]][acai-url] 
 [![Terraform Version][terraform-version-shield]][terraform-version-url]
+[![Latest Release][release-shield]][release-url]
+
+<!-- LOGO -->
+<div style="text-align: right; margin-top: -60px;">
+<a href="https://acai.gmbh">
+  <img src="https://github.com/acai-consulting/acai.public/raw/main/logo/logo_github_readme.png" alt="acai logo" title="ACAI"  width="250" /></a>
+</div>
+</br>
 
 <!-- DESCRIPTION -->
 This module will deploy the AWS Organization CloudTrail and the S3 bucket to store the logs encrypted with a KMS CMK.
@@ -16,7 +19,7 @@ Optionally the CloudTrail Logs can be stored in a CloudWatch LogGroup in the Clo
 
 <!-- ARCHITECTURE -->
 ## Architecture
-![architecture][architecture-png]
+![architecture][https://raw.githubusercontent.com/acai-consulting/terraform-aws--org-cloudtrail/main/docs/acf_org_cloudtrail.svg]
 
 
 <!-- BEGIN_TF_DOCS -->
@@ -82,10 +85,10 @@ See [LICENSE][license-url] for full details.
 <!-- MARKDOWN LINKS & IMAGES -->
 [acai-shield]: https://img.shields.io/badge/maintained_by-acai.gmbh-CB224B?style=flat
 [acai-url]: https://acai.gmbh
+[architecture-png]: ./docs/acf_org_cloudtrail.png
 [terraform-version-shield]: https://img.shields.io/badge/tf-%3E%3D1.3.9-blue.svg?style=flat&color=blueviolet
 [terraform-version-url]: https://www.terraform.io/upgrade-guides/1-3-9.html
-[release-shield]: https://img.shields.io/github/v/release/acai-consulting/terraform-aws-acf-ou-mgmt?style=flat&color=success
-[architecture-png]: ./docs/acf_org_cloudtrail.png
-[release-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/releases
-[license-url]: https://github.com/acai-consulting/terraform-aws-acf-ou-mgmt/tree/main/LICENSE
+[release-shield]: https://img.shields.io/github/v/release/acai-consulting/terraform-aws-acf-org-cloudtrail?style=flat&color=success
+[release-url]: https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/releases
+[license-url]: https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/tree/main/LICENSE.md
 [terraform-url]: https://www.terraform.io
