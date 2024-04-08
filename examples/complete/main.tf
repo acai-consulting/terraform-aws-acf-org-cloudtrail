@@ -86,7 +86,7 @@ module "example_complete" {
   cloudwatch_loggroup = {}
   s3_bucket = {
     bucket_name        = "org-cloudtrail-${random_string.suffix.result}"
-    days_to_expiration = 180
+    days_to_expiration = 3
     force_destroy      = true
   }
   providers = {
