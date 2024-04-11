@@ -36,7 +36,7 @@ locals {
       "module_source"   = "github.com/acai-consulting/terraform-aws-acf-org-cloudtrail",
       "module_version"  = /*inject_version_start*/ "1.2.2" /*inject_version_end*/
     }
-  ) 
+  )
   core_configuration_to_write = {
     "security" = {
       "org_cloudtrail" = {
