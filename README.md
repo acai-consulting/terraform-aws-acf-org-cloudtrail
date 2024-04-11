@@ -2,7 +2,10 @@
 
 <!-- SHIELDS -->
 [![Maintained by acai.gmbh][acai-shield]][acai-url] 
-[![Terraform Version][terraform-version-shield]][terraform-version-url]
+![module-version-shield]
+![terraform-version-shield]
+![trivy-shield]
+![checkov-shield]
 [![Latest Release][release-shield]][release-url]
 
 <!-- LOGO -->
@@ -71,7 +74,6 @@ Optionally the CloudTrail Logs can be stored in a CloudWatch LogGroup in the Clo
 This module is maintained by [ACAI GmbH][acai-url].
 
 <!-- LICENSE -->
-<!-- LICENSE -->
 ## License
 
 See [LICENSE][license-url] for full details.
@@ -84,9 +86,10 @@ See [LICENSE][license-url] for full details.
 <!-- MARKDOWN LINKS & IMAGES -->
 [acai-shield]: https://img.shields.io/badge/maintained_by-acai.gmbh-CB224B?style=flat
 [acai-url]: https://acai.gmbh
+[module-version-shield]: https://img.shields.io/badge/module_version-1.1.4-CB224B?style=flat
 [terraform-version-shield]: https://img.shields.io/badge/tf-%3E%3D1.3.9-blue.svg?style=flat&color=blueviolet
-[terraform-version-url]: https://www.terraform.io/upgrade-guides/1-3-9.html
+[trivy-shield]: https://img.shields.io/badge/trivy-passed-green
+[checkov-shield]: https://img.shields.io/badge/checkov-passed-green
 [release-shield]: https://img.shields.io/github/v/release/acai-consulting/terraform-aws-acf-org-cloudtrail?style=flat&color=success
 [release-url]: https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/releases
 [license-url]: https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/tree/main/LICENSE.md
-[terraform-url]: https://www.terraform.io

@@ -44,6 +44,9 @@ resource "aws_kms_key" "org_cloudtrail_kms" {
 }
 
 data "aws_iam_policy_document" "org_cloudtrail_kms" {
+  #checkov:skip=CKV_AWS_109 : Resource policy
+  #checkov:skip=CKV_AWS_111 : Resource policy
+  #checkov:skip=CKV_AWS_356 : Resource policy  
   # enable IAM in logging account
   statement {
     sid    = "Enable IAM User Permissions"

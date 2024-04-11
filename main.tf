@@ -28,6 +28,15 @@ data "aws_caller_identity" "org_cloudtrail" {
 # ¦ LOCALS
 # ---------------------------------------------------------------------------------------------------------------------
 locals {
+  resource_tags = merge(
+    var.resource_tags,
+    {
+      "module_provider" = "ACAI GmbH",
+      "module_name"     = "terraform-aws-acf-org-cloudtrail",
+      "module_source"   = "github.com/acai-consulting/terraform-aws-acf-org-cloudtrail",
+      "module_version"  = /*inject_version_start*/ "1.2.2" /*inject_version_end*/
+    }
+  )
   core_configuration_to_write = {
     "security" = {
       "org_cloudtrail" = {
@@ -49,7 +58,7 @@ module "log_archive_bucket" {
 
   s3_bucket           = var.s3_bucket
   org_mgmt_account_id = data.aws_caller_identity.org_cloudtrail.account_id
-  resource_tags       = var.resource_tags
+  resource_tags       = local.resource_tags
   providers = {
     aws = aws.org_cloudtrail_bucket
   }
@@ -60,7 +69,7 @@ module "cloudwatch_loggroup" {
   count  = var.cloudwatch_loggroup != null ? 1 : 0
 
   cloudwatch_loggroup = var.cloudwatch_loggroup
-  resource_tags       = var.resource_tags
+  resource_tags       = local.resource_tags
   providers = {
     aws = aws.org_cloudtrail_admin
   }
@@ -70,6 +79,8 @@ module "cloudwatch_loggroup" {
 # ¦ ORG MANAGEMENT - CLOUDTRAIL
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_cloudtrail" "org_cloudtrail_mgmt" {
+  #checkov:skip=CKV_AWS_252 : SNS Topic for Org CloudTrail is currently not planned   
+  #checkov:skip=CKV2_AWS_10 : Is optionally integrated with CloudWatch Logs  
   name                          = var.org_cloudtrail_name
   is_organization_trail         = true
   include_global_service_events = true
@@ -83,7 +94,7 @@ resource "aws_cloudtrail" "org_cloudtrail_mgmt" {
     read_write_type           = "All"
     include_management_events = true
   }
-  tags = var.resource_tags
+  tags = local.resource_tags
 
   depends_on = [module.log_archive_bucket]
 
