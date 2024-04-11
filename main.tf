@@ -28,6 +28,15 @@ data "aws_caller_identity" "org_cloudtrail" {
 # ¦ LOCALS
 # ---------------------------------------------------------------------------------------------------------------------
 locals {
+  resource_tags = merge(
+    var.resource_tags,
+    {
+      "module_provider" = "ACAI GmbH",
+      "module_name"     = "terraform-aws-acf-org-cloudtrail",
+      "module_source"   = "github.com/acai-consulting/terraform-aws-acf-org-cloudtrail",
+      "module_version"  = /*inject_version_start*/ "1.2.2" /*inject_version_end*/
+    }
+  ) 
   core_configuration_to_write = {
     "security" = {
       "org_cloudtrail" = {
