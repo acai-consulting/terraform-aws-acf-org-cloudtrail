@@ -87,16 +87,3 @@ variable "resource_tags" {
   type        = map(string)
   default     = {}
 }
-
-/*
-variable "resource_name_suffix" {
-  description = "Alphanumeric suffix for all the resource names in this module."
-  type        = string
-  default     = ""
-
-  validation {
-    condition     = var.resource_name_suffix == "" ? true : can(regex("[[:alnum:]]", var.resource_name_suffix))
-    error_message = "Value must be alphanumeric."
-  }
-}
-*/

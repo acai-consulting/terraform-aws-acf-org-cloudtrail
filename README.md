@@ -74,7 +74,6 @@ Optionally the CloudTrail Logs can be stored in a CloudWatch LogGroup in the Clo
 This module is maintained by [ACAI GmbH][acai-url].
 
 <!-- LICENSE -->
-<!-- LICENSE -->
 ## License
 
 See [LICENSE][license-url] for full details.

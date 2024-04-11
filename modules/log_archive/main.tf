@@ -38,6 +38,9 @@ resource "aws_kms_key" "core_logging_cloudtrail_mgmt_kms" {
 }
 
 data "aws_iam_policy_document" "core_logging_cloudtrail_mgmt_kms" {
+  #checkov:skip=CKV_AWS_109 : Resource policy
+  #checkov:skip=CKV_AWS_111 : Resource policy
+  #checkov:skip=CKV_AWS_356 : Resource policy  
   # enable IAM in logging account
   statement {
     sid    = "Enable IAM User Permissions"
@@ -135,6 +138,7 @@ resource "aws_kms_alias" "core_logging_cloudtrail_mgmt_kms" {
 # ¦ S3 BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_s3_bucket" "cloudtrail_logs" {
+  #checkov:skip=CKV_AWS_144 : Cross-region replication is not a requirement yet - # TODO check for later versions of the module
   bucket        = var.s3_bucket.bucket_name
   force_destroy = var.s3_bucket.force_destroy
   tags          = var.resource_tags
@@ -155,7 +159,6 @@ resource "aws_s3_bucket_public_access_block" "cloudtrail_logs" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-
 
 resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
   bucket = aws_s3_bucket.cloudtrail_logs.id
@@ -187,6 +190,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs" 
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
+  #checkov:skip=CKV_AWS_300 : currently not source for an issue 
   bucket = aws_s3_bucket.cloudtrail_logs.id
 
   rule {
@@ -211,6 +215,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs" {
 #tfsec:ignore:avd-aws-0089
 #tfsec:ignore:avd-aws-0090
 resource "aws_s3_bucket" "log_access_bucket" {
+  #checkov:skip=CKV_AWS_144 : Cross-region replication is not a requirement yet - # TODO check for later versions of the module
+  #checkov:skip=CKV2_AWS_62
   count         = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
   force_destroy = var.s3_bucket.force_destroy
 
@@ -243,6 +249,40 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "log_access_bucket
     apply_server_side_encryption_by_default {
       kms_master_key_id = aws_kms_key.core_logging_cloudtrail_mgmt_kms.arn
       sse_algorithm     = "aws:kms"
+    }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "cloudtrail_logs_access" {
+  count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
+
+  bucket = aws_s3_bucket.log_access_bucket[0].id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail_logs_access" {
+  #checkov:skip=CKV_AWS_300 : currently not source for an issue 
+  count = var.s3_bucket.bucket_access_s3_id == null ? 1 : 0
+
+  bucket = aws_s3_bucket.log_access_bucket[0].id
+
+  rule {
+    id     = "log"
+    status = "Enabled"
+
+    # Only add the transition rule if days_to_glacier is not -1
+    dynamic "transition" {
+      for_each = var.s3_bucket.days_to_glacier != -1 ? [1] : []
+      content {
+        days          = var.s3_bucket.days_to_glacier
+        storage_class = "GLACIER"
+      }
+    }
+
+    expiration {
+      days = var.s3_bucket.days_to_expiration
     }
   }
 }
@@ -421,6 +461,7 @@ data "aws_iam_policy_document" "cloudtrail_logs" {
 # ---------------------------------------------------------------------------------------------------------------------
 #tfsec:ignore:avd-aws-0095  # only meta-data
 resource "aws_sns_topic" "s3_notification_sns" {
+  #checkov:skip=CKV_AWS_26 : only metadata
   count = var.s3_bucket.notification_to_sns != null ? 1 : 0
 
   name = var.s3_bucket.notification_to_sns.sns_name

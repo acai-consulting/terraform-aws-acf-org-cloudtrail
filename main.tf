@@ -79,6 +79,8 @@ module "cloudwatch_loggroup" {
 # ¦ ORG MANAGEMENT - CLOUDTRAIL
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_cloudtrail" "org_cloudtrail_mgmt" {
+  #checkov:skip=CKV_AWS_252 : SNS Topic for Org CloudTrail is currently not planned   
+  #checkov:skip=CKV2_AWS_10 : Is optionally integrated with CloudWatch Logs  
   name                          = var.org_cloudtrail_name
   is_organization_trail         = true
   include_global_service_events = true
