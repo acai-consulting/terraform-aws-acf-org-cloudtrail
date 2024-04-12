@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.4](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/compare/1.0.3...1.0.4) (2024-04-12)
+
+
+### Bug Fixes
+
+* add s3:GetObjectVersion permission ([#8](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/issues/8)) ([ace48ca](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/commit/ace48ca794d77f63d582a87439d6e105e99fe806))
+
 ## [1.0.3](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/compare/1.0.2...1.0.3) (2024-04-11)
 
 
