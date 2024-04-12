@@ -381,7 +381,8 @@ data "aws_iam_policy_document" "cloudtrail_logs" {
       sid    = "ReaderPrincipals"
       effect = "Allow"
       actions = [
-        "s3:GetObject"
+        "s3:GetObject",
+        "s3:GetObjectVersion" # required for Splunk AWS Add-on >= 6.0.0      
       ]
       principals {
         type        = "AWS"
