@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/compare/1.0.4...1.0.5) (2024-04-27)
+
+
+### Bug Fixes
+
+* rename folder for CICD-Manager templates ([#9](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/issues/9)) ([a853074](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/commit/a8530740b4b48d0764c2036a35349da101641b09))
+
 ## [1.0.4](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/compare/1.0.3...1.0.4) (2024-04-12)
 
 
