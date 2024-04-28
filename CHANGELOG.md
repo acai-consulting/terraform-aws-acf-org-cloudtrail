@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.6](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/compare/1.0.5...1.0.6) (2024-04-28)
+
+
+### Bug Fixes
+
+* add kms policy override ([#10](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/issues/10)) ([555bcf9](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/commit/555bcf9bd842a7687ab4e6e39a22e0003ddc4aec))
+
 ## [1.0.5](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/compare/1.0.4...1.0.5) (2024-04-27)
 
 
