@@ -49,8 +49,8 @@ variable "s3_bucket" {
     days_to_glacier           = optional(number, -1)
     days_to_expiration        = number
     bucket_access_s3_id       = optional(string, null)
-    force_destroy             = optional(bool, false)  # true - for testing only
-    kms_principal_permissions = list(string) # should override the statement_id 'PrincipalPermissions'
+    force_destroy             = optional(bool, false) # true - for testing only
+    kms_principal_permissions = list(string)          # should override the statement_id 'PrincipalPermissions'
     policy = optional(object({
       reader_principal_arns = optional(list(string), [])
       access_to_org         = optional(bool, false)
