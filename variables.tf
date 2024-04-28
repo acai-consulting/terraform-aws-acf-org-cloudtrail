@@ -14,7 +14,7 @@ variable "cloudwatch_loggroup" {
     iam_role_path             = optional(string, "/")
     iam_role_pb               = optional(string, null)
     retention_in_days         = optional(number, 3)
-    kms_principal_permissions = list(string) # should override the statement_id 'PrincipalPermissions'
+    kms_principal_permissions = optional(list(string), []) # should override the statement_id 'PrincipalPermissions'
     monitoring = optional(object({
       inbound_iam_role_name = optional(string, null)
       destination_arn       = optional(string, null)
@@ -49,8 +49,8 @@ variable "s3_bucket" {
     days_to_glacier           = optional(number, -1)
     days_to_expiration        = number
     bucket_access_s3_id       = optional(string, null)
-    force_destroy             = optional(bool, false)  # true - for testing only
-    kms_principal_permissions = list(string) # should override the statement_id 'PrincipalPermissions'
+    force_destroy             = optional(bool, false)      # true - for testing only
+    kms_principal_permissions = optional(list(string), []) # should override the statement_id 'PrincipalPermissions'
     policy = optional(object({
       reader_principal_arns = optional(list(string), [])
       access_to_org         = optional(bool, false)
