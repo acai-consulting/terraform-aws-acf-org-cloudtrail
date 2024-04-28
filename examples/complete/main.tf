@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "org_cloudtrail_kms" {
     sid    = "PrincipalPermissions"
     effect = "Allow"
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.org_cloudtrail.account_id}:root",
         "arn:aws:iam::992382728088:root"
