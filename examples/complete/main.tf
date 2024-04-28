@@ -62,7 +62,7 @@ module "example_complete" {
   org_cloudtrail_name = "organization-cloudtrail"
 
   cloudwatch_loggroup = {
-    kms_principal_permissions = data.aws_iam_policy_document.org_cloudtrail_kms.json
+    kms_principal_permissions = [data.aws_iam_policy_document.org_cloudtrail_kms.json]
   }
   s3_bucket = {
     bucket_name        = "org-cloudtrail-${random_string.suffix.result}"

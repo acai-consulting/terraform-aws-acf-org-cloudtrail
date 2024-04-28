@@ -48,7 +48,7 @@ data "aws_iam_policy_document" "org_cloudtrail_kms" {
   #checkov:skip=CKV_AWS_111 : Resource policy
   #checkov:skip=CKV_AWS_356 : Resource policy  
   # enable IAM in logging account
-  override_policy_documents = [var.cloudwatch_loggroup.kms_principal_permissions]
+  override_policy_documents = var.cloudwatch_loggroup.kms_principal_permissions
   statement {
     sid    = "PrincipalPermissions"
     effect = "Allow"

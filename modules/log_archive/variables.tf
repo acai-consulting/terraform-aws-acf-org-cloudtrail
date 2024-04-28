@@ -6,7 +6,7 @@ variable "s3_bucket" {
     days_to_expiration        = number
     bucket_access_s3_id       = string
     force_destroy             = bool
-    kms_principal_permissions = optional(string, null) # should override the statement_id 'PrincipalPermissions'
+    kms_principal_permissions = list(string) # should override the statement_id 'PrincipalPermissions'
     policy = object({
       reader_principal_arns = list(string)
       access_to_org         = bool

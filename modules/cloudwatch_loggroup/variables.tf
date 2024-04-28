@@ -6,7 +6,7 @@ variable "cloudwatch_loggroup" {
     iam_role_path             = string
     iam_role_pb               = string
     retention_in_days         = number
-    kms_principal_permissions = optional(string, null) # should override the statement_id 'PrincipalPermissions'
+    kms_principal_permissions = list(string) # should override the statement_id 'PrincipalPermissions'
     monitoring = object({
       inbound_iam_role_name = string
       destination_arn       = string
