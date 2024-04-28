@@ -35,7 +35,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#input\_cloudwatch\_loggroup) | Configuration settings for CloudWatch LogGroup. | <pre>object({<br>    loggroup_name             = string<br>    iam_role_name             = string<br>    iam_role_path             = string<br>    iam_role_pb               = string<br>    retention_in_days         = number<br>    kms_principal_permissions = optional(string, null) # should override the statement_id 'PrincipalPermissions'<br>    monitoring = object({<br>      inbound_iam_role_name = string<br>      destination_arn       = string<br>    })<br>  })</pre> | n/a | yes |
+| <a name="input_cloudwatch_loggroup"></a> [cloudwatch\_loggroup](#input\_cloudwatch\_loggroup) | Configuration settings for CloudWatch LogGroup. | <pre>object({<br>    loggroup_name             = string<br>    iam_role_name             = string<br>    iam_role_path             = string<br>    iam_role_pb               = string<br>    retention_in_days         = number<br>    kms_principal_permissions = list(string) # should override the statement_id 'PrincipalPermissions'<br>    monitoring = object({<br>      inbound_iam_role_name = string<br>      destination_arn       = string<br>    })<br>  })</pre> | n/a | yes |
 | <a name="input_resource_tags"></a> [resource\_tags](#input\_resource\_tags) | A map of tags to assign to the resources in this module. | `map(string)` | n/a | yes |
 
 ## Outputs
