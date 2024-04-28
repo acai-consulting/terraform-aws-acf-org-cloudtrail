@@ -46,7 +46,7 @@ data "aws_iam_policy_document" "org_cloudtrail_kms" {
     principals {
       type        = "AWS"
       identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.org_cloudtrail.account_id}:root",
+        "arn:aws:iam::471112796356:root",
         "arn:aws:iam::992382728088:root"
       ]
     }
