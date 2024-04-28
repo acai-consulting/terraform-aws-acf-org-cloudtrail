@@ -35,12 +35,35 @@ resource "random_string" "suffix" {
 # ---------------------------------------------------------------------------------------------------------------------
 # ¦ MODULE
 # ---------------------------------------------------------------------------------------------------------------------
+data "aws_iam_policy_document" "org_cloudtrail_kms" {
+  #checkov:skip=CKV_AWS_109 : Resource policy
+  #checkov:skip=CKV_AWS_111 : Resource policy
+  #checkov:skip=CKV_AWS_356 : Resource policy  
+  # enable IAM in logging account
+  statement {
+    sid    = "PrincipalPermissions"
+    effect = "Allow"
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::471112796356:root",
+        "arn:aws:iam::992382728088:root"
+      ]
+    }
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
+}
+
+
 module "example_complete" {
   source = "../../"
 
   org_cloudtrail_name = "organization-cloudtrail"
 
-  cloudwatch_loggroup = {}
+  cloudwatch_loggroup = {
+    kms_principal_permissions = [data.aws_iam_policy_document.org_cloudtrail_kms.json]
+  }
   s3_bucket = {
     bucket_name        = "org-cloudtrail-${random_string.suffix.result}"
     days_to_expiration = 3

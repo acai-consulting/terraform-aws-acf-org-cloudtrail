@@ -1,11 +1,12 @@
 variable "cloudwatch_loggroup" {
   description = "Configuration settings for CloudWatch LogGroup."
   type = object({
-    loggroup_name     = string
-    iam_role_name     = string
-    iam_role_path     = string
-    iam_role_pb       = string
-    retention_in_days = number
+    loggroup_name             = string
+    iam_role_name             = string
+    iam_role_path             = string
+    iam_role_pb               = string
+    retention_in_days         = number
+    kms_principal_permissions = list(string) # should override the statement_id 'PrincipalPermissions'
     monitoring = object({
       inbound_iam_role_name = string
       destination_arn       = string

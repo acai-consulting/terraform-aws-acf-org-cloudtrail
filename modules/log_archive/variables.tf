@@ -1,11 +1,12 @@
 variable "s3_bucket" {
   description = "Configuration settings for core logging."
   type = object({
-    bucket_name         = string
-    days_to_glacier     = number
-    days_to_expiration  = number
-    bucket_access_s3_id = string
-    force_destroy       = bool
+    bucket_name               = string
+    days_to_glacier           = number
+    days_to_expiration        = number
+    bucket_access_s3_id       = string
+    force_destroy             = bool
+    kms_principal_permissions = list(string) # should override the statement_id 'PrincipalPermissions'
     policy = object({
       reader_principal_arns = list(string)
       access_to_org         = bool
