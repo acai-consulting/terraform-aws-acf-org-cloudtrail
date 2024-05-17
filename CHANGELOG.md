@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.7](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/compare/1.0.6...1.0.7) (2024-05-17)
+
+
+### Bug Fixes
+
+* updated license  ([#11](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/issues/11)) ([ec169a1](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/commit/ec169a1e154bea1edf11660f9e93ef5cf1da7e49))
+
 ## [1.0.6](https://github.com/acai-consulting/terraform-aws-acf-org-cloudtrail/compare/1.0.5...1.0.6) (2024-04-28)
 
 

@@ -34,7 +34,7 @@ locals {
       "module_provider" = "ACAI GmbH",
       "module_name"     = "terraform-aws-acf-org-cloudtrail",
       "module_source"   = "github.com/acai-consulting/terraform-aws-acf-org-cloudtrail",
-      "module_version"  = /*inject_version_start*/ "1.0.6" /*inject_version_end*/
+      "module_version"  = /*inject_version_start*/ "1.0.7" /*inject_version_end*/
     }
   )
   core_configuration_to_write = {
