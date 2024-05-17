@@ -5,7 +5,7 @@ License text copyright © 2023 MariaDB plc, All Rights Reserved.
 
 **Licensor**: ACAI GmbH, Switzerland
 
-**Licensed Work**: ACF (ACAI Cloud Foundation) 0.0.1 or later. The Licensed Work is copyrighted (c) 2024 by ACAI GmbH
+**Licensed Work**: The Licensed Work is copyrighted (c) 2024 by ACAI GmbH
 
 ## Terms
 
