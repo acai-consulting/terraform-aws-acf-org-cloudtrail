@@ -1,7 +1,7 @@
 # ACAI Cloud Foundation (ACF) License
 
-License text copyright (c) 2020 MariaDB Corporation Ab, All Rights Reserved.
-"Business Source License" is a trademark of MariaDB Corporation Ab.
+License text copyright © 2023 MariaDB plc, All Rights Reserved.
+“Business Source License” is a trademark of MariaDB plc.
 
 ## Parameters
 
@@ -16,7 +16,7 @@ The Business Source License is not an Open Source license. However, the Licensed
 |--------------------|-----------------------------------------------------------------------------------------------------|
 | **Licensor**       | ACAI GmbH, Switzerland                                                                              |
 | **Licensed Work**  | ACF (ACAI Cloud Foundation) 0.0.1 or later. The Licensed Work is copyrighted (c) 2024 by ACAI GmbH  |
-| **Additional Use Grant** | Production use of the Licensed Work is permitted solely under the condition that such use is accompanied by the purchase of consulting services or solutions from ACAI Consulting. The Licensed Work may not be offered to third parties in the form of consulting, managed services, or any other service that utilizes the Licensed Work in a manner that constitutes a competitive offering. For the purposes of this license, a "competitive offering" refers to any product, solution, or service that is made available to third parties, particularly on a paid basis, which includes but is not limited to consulting services, paid support arrangements, or managed services that incorporate the Licensed Work. |
+| **Additional Use Grant** | Production use of the Licensed Work, referring to the deployment and operation of the Licensed Work in a live environment or any environment intended for actual use, including but not limited to commercial, industrial, or research and development purposes, is permitted solely under the condition that such use is accompanied by the purchase of consulting services or solutions from ACAI GmbH. The Licensed Work may not be offered to third parties in the form of consulting, managed services, or any other service that utilizes the Licensed Work in a manner that constitutes a competitive offering. For the purposes of this license, a "competitive offering" refers to any product, solution, or service that is made available to third parties, particularly on a paid basis, which includes but is not limited to consulting services, paid support arrangements, or managed services that incorporate the Licensed Work. ACAI GmbH reserves the right to collect royalties or additional fees, determined at their sole discretion, for any production use of the Licensed Work that does not comply with the conditions specified in this license. |
 | **Change Date**    | Four years from the date the Licensed Work is published.                                            |
 | **Change License** | Mozilla Public License 2.0 (MPL 2.0)                                                                |
 
