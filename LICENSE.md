@@ -1,4 +1,4 @@
-# ACAI Cloud Foundation (ACF) License
+# Business Source License 1.1
 
 License text copyright © 2023 MariaDB plc, All Rights Reserved.
 “Business Source License” is a trademark of MariaDB plc.
@@ -39,3 +39,17 @@ Any use of the Licensed Work in violation of this License will automatically ter
 This License does not grant you any right in any trademark or logo of Licensor or its affiliates (provided that you may use a trademark or logo of Licensor as expressly required by this License).
 
 TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE LICENSED WORK IS PROVIDED ON AN "AS IS" BASIS. LICENSOR HEREBY DISCLAIMS ALL WARRANTIES AND CONDITIONS, EXPRESS OR IMPLIED, INCLUDING (WITHOUT LIMITATION) WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND TITLE.
+
+## Notice
+
+The Business Source License (this document, or the “License”) is not an Open Source license. However, the Licensed Work will eventually be made available under an Open Source License, as stated in this License.
+
+## Additional Use Grant
+
+Production use of the Licensed Work, referring to the deployment and operation of the Licensed Work in a live environment or any environment intended for actual use, including but not limited to commercial, industrial, or research and development purposes, is permitted solely under the condition that such use is accompanied by the purchase of consulting services or solutions from ACAI ConsultingGmbH. The Licensed Work may not be offered to third parties in the form of consulting, managed services, or any other service that utilizes the Licensed Work in a manner that constitutes a competitive offering. For the purposes of this license, a "competitive offering" refers to any product, solution, or service that is made available to third parties, particularly on a paid basis, which includes but is not limited to consulting services, paid support arrangements, or managed services that incorporate the Licensed Work. ACAI GmbH reserves the right to collect royalties or additional fees, determined at their sole discretion, for any production use of the Licensed Work that does not comply with the conditions specified in this license.
+
+**Change Date**: Four years from the date the Licensed Work is published.
+
+**Change License**: Mozilla Public License 2.0 (MPL 2.0)
+
+For information about alternative licensing arrangements for the Licensed Work, please contact <contact@acai.gmbh>.
